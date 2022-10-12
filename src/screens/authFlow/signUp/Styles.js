@@ -40,5 +40,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: width(5),
     paddingVertical: height(3),
   },
+  box: {
+    borderColor: '#D5D5D5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderRadius: 5,
+    elevation: 4,
+    width: width(70),
+    marginTop: height(5),
+    paddingHorizontal: width(5.5),
+    paddingVertical: height(5),
+    backgroundColor:colors.white
+  },
+  boxHeading: {
+    fontWeight: '600',
+    textAlign: 'center',
+    letterSpacing: 2,
+    fontSize: 17,
+    color: colors.black,
+    marginTop: height(2),
+  },
 });
 export default styles;
