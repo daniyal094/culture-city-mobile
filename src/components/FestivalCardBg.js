@@ -1,9 +1,10 @@
 import {ImageBackground, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Evenet from '../assets/images/Evenet.png';
-import {height, width} from 'react-native-dimension';
+import {height, totalSize, width} from 'react-native-dimension';
 import {colors} from '../utils/constants/colors';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
+import CalanderBox from './CalanderBox';
 const FestivalCardBg = ({data}) => {
   return (
     <ImageBackground
@@ -17,17 +18,7 @@ const FestivalCardBg = ({data}) => {
           justifyContent: 'space-between',
           height: height(27),
         }}>
-        <View style={styles.calander}>
-          <View style={styles.calanderHeader}>
-            <Text style={{fontSize: 10, color: colors.white}}>December</Text>
-          </View>
-          <View style={styles.calanderBody}>
-            <Text
-              style={{fontWeight: '600', color: colors.black, fontSize: 22}}>
-              24
-            </Text>
-          </View>
-        </View>
+      <CalanderBox/>
         <View style={styles.detailContainer}>
           <Text style={styles.cardHeading}>FestivalCardBg Test</Text>
           <Text style={styles.cardDetailText}>
@@ -55,29 +46,7 @@ const styles = StyleSheet.create({
     height: height(27),
     marginHorizontal: width(1),
   },
-  calander: {
-    width: width(11),
-    height: height(5.5),
-    backgroundColor: colors.white,
-    flexDirection: 'column',
-    borderRadius: 5,
-    alignSelf: 'flex-end',
-    marginRight: 10,
-    marginTop: 10,
-  },
-  calanderHeader: {
-    backgroundColor: colors.danger,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 2,
-    borderTopRightRadius: 5,
-    borderTopLeftRadius: 5,
-  },
-  calanderBody: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+ 
   cardHeading: {
     color: colors.white,
     fontSize: 14,

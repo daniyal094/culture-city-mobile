@@ -1,7 +1,14 @@
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Pressable, Text} from 'react-native';
 import React from 'react';
+import { colors } from '../utils/constants/colors';
 
-const CustomButton = ({label, labeColor, bgColor, onPress}) => {
+const CustomButton = ({
+  label,
+  labeColor,
+  bgColor,
+  onPress,
+  loading = false,
+}) => {
   return (
     <Pressable
       style={{
@@ -11,16 +18,20 @@ const CustomButton = ({label, labeColor, bgColor, onPress}) => {
         backgroundColor: bgColor,
         paddingVertical: 15,
         borderRadius: 10,
-        marginVertical:10
+        marginVertical: 10,
       }}
       onPress={onPress}>
-      <Text
-        style={{
-          color: labeColor,
-          fontSize:15
-        }}>
-        {label}
-      </Text>
+      {loading ? (
+            <ActivityIndicator size="small" color={colors.white} />
+      ) : (
+        <Text
+          style={{
+            color: labeColor,
+            fontSize: 15,
+          }}>
+          {label}
+        </Text>
+      )}
     </Pressable>
   );
 };

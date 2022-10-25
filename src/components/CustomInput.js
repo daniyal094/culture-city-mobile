@@ -1,9 +1,23 @@
-import {Image, StyleSheet, TextInput, View} from 'react-native';
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import React from 'react';
 import {colors} from '../utils/constants/colors';
-import { width } from 'react-native-dimension';
+import {width} from 'react-native-dimension';
 
-const CustomInput = ({icon, placeholder, value, onChangeText,secureTextEntry = false}) => {
+const CustomInput = ({
+  icon = false,
+  placeholder,
+  value,
+  onChangeText,
+  secureTextEntry = false,
+  iconPressHandler
+}) => {
   return (
     <View style={styles.inputWrapper}>
       <TextInput
@@ -13,7 +27,11 @@ const CustomInput = ({icon, placeholder, value, onChangeText,secureTextEntry = f
         placeholder={placeholder}
         secureTextEntry={secureTextEntry}
       />
-      <Image source={icon} style={styles.inputIcon} />
+      {icon && (
+        <Pressable style={{marginRight: width(3)}} onPress={iconPressHandler}>
+          {icon}
+        </Pressable>
+      )}
     </View>
   );
 };
@@ -29,14 +47,14 @@ const styles = StyleSheet.create({
     width: '90%',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderRadius:6,
-    color:colors.black,
-    marginVertical:10
+    borderRadius: 6,
+    color: colors.black,
+    marginVertical: 10,
   },
-  input:{
-    width:width(70)
+  input: {
+    width: width(70),
   },
-  inputIcon:{
-    marginRight:15
-  }
+  inputIcon: {
+    marginRight: 15,
+  },
 });

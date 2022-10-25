@@ -10,5 +10,12 @@ export const colors = {
   gray: '#E3E3E3',
   camel: '#FFC60B',
   lightBlue: '#4285F4',
-  disableColor:'#767676'
+  disableColor: '#767676',
+  coal: '#505050',
+  pink: '#F9005A',
+  green: '#9FCC04',
+  darkGreen: '#00B3A1',
+  skyBlue: '#38A4DA',
+  lightPink: '#F877B1',
+  yellow: '#FBC500',
 };

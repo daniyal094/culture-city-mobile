@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: height(2),
     marginHorizontal: width(2),
+    elevation: 3,
   },
   imgStyle: {
     width: '100%',
@@ -48,6 +49,6 @@ const styles = StyleSheet.create({
   lastContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop:10,
+    marginTop: 10,
   },
 });

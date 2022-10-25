@@ -7,12 +7,15 @@ import CustomButton from '../../../components/CustomButton';
 import {colors} from '../../../utils/constants/colors';
 import CheckBoxWithLable from '../../../components/CheckBoxWithLable';
 import styles from './Styles';
-import { routes } from '../../../utils/constants/routes';
-import { useNavigation } from '@react-navigation/native';
+import {routes} from '../../../utils/constants/routes';
+import {useNavigation} from '@react-navigation/native';
+import FeatherIcons from 'react-native-vector-icons/Feather';
 
 const SignUpForm = () => {
   const [isChecked, setisChecked] = useState(false);
-  const navigation = useNavigation()
+  const [showPass, setshowPass] = useState(false);
+  const navigation = useNavigation();
+
   return (
     <View style={styles.bodyContainer}>
       <ScrollView>
@@ -36,7 +39,18 @@ const SignUpForm = () => {
           </View>
           <CustomInput placeholder="Full Name" />
           <CustomInput placeholder="Example@example.com" />
-          <CustomInput icon={Eye} placeholder="Password" />
+          <CustomInput
+            icon={
+              showPass ? (
+                <FeatherIcons name="eye-off" color={colors.black} />
+              ) : (
+                <FeatherIcons name="eye" color={colors.black} />
+              )
+            }
+            placeholder="Password"
+            secureTextEntry={showPass}
+            iconPressHandler={() => setshowPass(!showPass)}
+          />
           <CustomInput placeholder="Password Confirm" />
 
           <View

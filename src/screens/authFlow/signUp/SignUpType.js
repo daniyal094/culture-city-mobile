@@ -31,8 +31,8 @@ const SignUpType = ({userTypeHandler}) => {
           <Text style={styles.boxHeading}>Bring culture to your city!</Text>
           <View style={{flexDirection: 'row', marginTop: 10}}>
             <Text>Sign up as an </Text>
-            <TouchableOpacity onPress={() => userTypeHandler('Event Creator')}>
-              <Text style={{color: colors.secondary}}>Event Creator</Text>
+            <TouchableOpacity onPress={() => userTypeHandler('organiser')}>
+              <Text style={{color: colors.secondary}}>organiser</Text>
             </TouchableOpacity>
           </View>
         </View>
