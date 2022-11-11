@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   profilePicture: {
-    width: width(20),
-    height: height(10),
+    width: width(19),
+    height: height(9),
     borderRadius: 50,
   },
   profileHeading: {

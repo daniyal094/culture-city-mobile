@@ -1,4 +1,4 @@
-import {View, Text, TextInput, FlatList} from 'react-native';
+import {View,  TextInput, FlatList} from 'react-native';
 import React from 'react';
 import styles from './Styles';
 import AntIcon from 'react-native-vector-icons/dist/AntDesign';
@@ -6,7 +6,8 @@ import {height, totalSize, width} from 'react-native-dimension';
 import {colors} from '../../../utils/constants/colors';
 import TabBar from '../../../components/TabBar';
 import EventCard from '../../../components/EventCard';
-const Search = () => {
+const Search = (props) => {
+  const propsData = props.route.params;
   return (
     <>
       <View style={styles.wraper}>
@@ -16,7 +17,7 @@ const Search = () => {
               keyboardType="web-search"
               placeholder="Search event"
               placeholderTextColor={colors.disableColor}
-              style={{width: width(70), color: colors.coal}}
+              style={{width: width(70), color: colors.coal, padding: height(2)}}
             />
             <AntIcon
               name="arrowright"
@@ -25,10 +26,10 @@ const Search = () => {
             />
           </View>
         </View>
-        <View style={{marginTop:height(2),marginBottom:height(5)}}>
+        <View style={styles.listContainer}>
           <FlatList
-            data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
-            renderItem={({item}) => <EventCard />}
+            data={propsData?.searchList}
+            renderItem={({item}) => <EventCard data={item}/>}
           />
         </View>
 

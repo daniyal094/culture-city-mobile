@@ -13,4 +13,13 @@ export const routes = {
   profileInterest: 'profileInterest',
   searchScreen: 'searchScreen',
   eventDetail: 'eventDetail',
+  verification: 'verification',
+  newPass: 'newPas',
+  changePass:'changePass',
+  changePassSuccess : 'changePassSuccess',
+  contact:'contact us',
+  aboutUs : 'aboutUs',
+  eventList:'eventList',
+  myBooking : 'myBooking',
+  myBookmark:'myBookmark',
 };

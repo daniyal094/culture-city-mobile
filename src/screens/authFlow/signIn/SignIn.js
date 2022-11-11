@@ -9,7 +9,6 @@ import React, {useState} from 'react';
 import styles from './Styles';
 import authBanner from '../../../assets/images/authBanner.png';
 import CustomInput from '../../../components/CustomInput';
-import Eye from '../../../assets/icons/Eye.png';
 import {height, width} from 'react-native-dimension';
 import CustomButton from '../../../components/CustomButton';
 import {colors} from '../../../utils/constants/colors';
@@ -35,8 +34,7 @@ const SignIn = () => {
   const {isLoading: isLoginLoading, mutate} = useHandleLoginApi();
   const handleLoginSubmit = () => {
     if (IsEmail(loginData.email)) {
-      // mutate(loginData);
-      navigation.navigate(routes.app);
+      mutate(loginData);
     } else {
       Toast.show('Email is not Correct');
     }

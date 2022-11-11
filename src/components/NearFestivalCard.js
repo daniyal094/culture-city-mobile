@@ -1,20 +1,38 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View, Pressable} from 'react-native';
 import React from 'react';
 import {height, width} from 'react-native-dimension';
 import {colors} from '../utils/constants/colors';
 import eventNearBy from '../assets/images/eventNearBy.png';
-const NearFestivalCard = () => {
+import {useNavigation} from '@react-navigation/native';
+import {routes} from '../utils/constants/routes';
+import {MEDIA_BASE_URL} from '../utils/constants/enums';
+const NearFestivalCard = ({item}) => {
+  const navigation = useNavigation();
+  const pressHanler = () => {
+    navigation.navigate(routes.eventDetail, {id: item._id});
+  };
+  const imgSrc =
+    item?.media?.length > 0 && `${MEDIA_BASE_URL}${item?.media[0]}`;
   return (
     <View style={styles.container}>
-      <Image source={eventNearBy} resizeMode="cover" style={styles.imgStyle} />
-      <View style={{paddingHorizontal: 10, marginTop: 10}}>
-        <Text style={styles.cardHeading}>Festival of colors</Text>
-        <Text style={styles.cardSubhHeading}>Pilar, Bataan</Text>
-        <View style={styles.lastContainer}>
-          <Text style={styles.cardSubhHeading}>44mins</Text>
-          <Text style={styles.cardSubhHeading}>2mi</Text>
+      <Pressable onPress={pressHanler}>
+        <Image
+          source={item?.media?.length > 0 ? {uri: imgSrc} : eventNearBy}
+          resizeMode="cover"
+          style={styles.imgStyle}
+        />
+        <View style={{paddingHorizontal: 10, marginTop: 10}}>
+          <Text style={styles.cardHeading}>{item?.title}</Text>
+          <Text
+            style={
+              styles.cardSubhHeading
+            }>{`${item?.location?.address?.countryOrRegion} - ${item?.location?.address?.city}`}</Text>
+          <View style={styles.lastContainer}>
+            <Text style={styles.cardSubhHeading}>44mins</Text>
+            <Text style={styles.cardSubhHeading}>2mi</Text>
+          </View>
         </View>
-      </View>
+      </Pressable>
     </View>
   );
 };

@@ -1,5 +1,5 @@
 import {View, Text, Pressable, Image, ScrollView} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './Styles';
 import TabBar from '../../../components/TabBar';
 import AntIcon from 'react-native-vector-icons/dist/AntDesign';
@@ -10,7 +10,11 @@ import {useNavigation} from '@react-navigation/native';
 import Evenet from '../../../assets/images/Evenet.png';
 import ProfileView from './ProfileView';
 import ProfileEdit from './ProfileEdit';
+import {getAsyncStorage} from '../../../utils/helper/functions';
+import { MEDIA_BASE_URL } from '../../../utils/constants/enums';
 const Profile = () => {
+  const [user, setuser] = useState('');
+  console.log(user);
   const navigation = useNavigation();
   const [isEdit, setisEdit] = useState(false);
   const backHandler = () => {
@@ -20,6 +24,14 @@ const Profile = () => {
       setisEdit(!isEdit);
     }
   };
+  useEffect(() => {
+    //get user from async storage
+    getAsyncStorage('user').then(res => setuser(res.user));
+  }, []);
+  const imgSrc = !user?.profilePicture?.isCompleteUrl
+    ? `${MEDIA_BASE_URL}${user?.profilePicture?.url}`
+    : user?.profilePicture?.url;
+
   return (
     <>
       <View style={styles.wraper}>
@@ -50,13 +62,24 @@ const Profile = () => {
 
           <View style={styles.profilePictureContainer}>
             <Image
-              source={Evenet}
+              source={{uri: imgSrc}}
               resizeMode="cover"
               style={styles.profilePicture}
             />
-            {!isEdit && <Text style={styles.heading}>Liz Bautista User</Text>}
+            {!isEdit && (
+              <Text style={styles.heading}>
+                {user.firstName + ' ' + user.lastName}
+              </Text>
+            )}
           </View>
-          {!isEdit ? <ProfileView /> : <ProfileEdit />}
+          {!isEdit ? (
+            <ProfileView userData={user} />
+          ) : (
+            <ProfileEdit
+              userData={user}
+              setisEdit={value => setisEdit(value)}
+            />
+          )}
         </ScrollView>
       </View>
       <TabBar selectedTab={'Profile'} />

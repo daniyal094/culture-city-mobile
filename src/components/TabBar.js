@@ -8,12 +8,19 @@ import {useCallback, useRef} from 'react';
 import CustomBottomSheet from './CustomBottomSheet';
 import {useNavigation} from '@react-navigation/native';
 import {routes} from '../utils/constants/routes';
+import SearchBottomSheet from './SearchBottomSheet';
 
 const TabBar = ({selectedTab}) => {
   const navigation = useNavigation();
   const bottomSheetModalRef = useRef(null);
+  const searchSheetModalRef = useRef(null);
+
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
+  }, []);
+
+  const handlePresentSearchModalPress = useCallback(() => {
+    searchSheetModalRef.current?.present();
   }, []);
 
   return (
@@ -41,7 +48,7 @@ const TabBar = ({selectedTab}) => {
             </Text>
           </View>
         </Pressable>
-        <Pressable onPress={() => navigation.navigate(routes.eventDetail)}>
+        <Pressable onPress={() => navigation.navigate(routes.eventList)}>
           <View
             style={{
               ...styles.rowContainer,
@@ -63,7 +70,7 @@ const TabBar = ({selectedTab}) => {
             </Text>
           </View>
         </Pressable>
-        <Pressable onPress={() => navigation.navigate(routes.searchScreen)}>
+        <Pressable onPress={handlePresentSearchModalPress}>
           <View
             style={{
               ...styles.rowContainer,
@@ -136,6 +143,7 @@ const TabBar = ({selectedTab}) => {
           </View>
         </Pressable>
       </View>
+      <SearchBottomSheet searchSheetModalRef={searchSheetModalRef}/>
       <CustomBottomSheet bottomSheetModalRef={bottomSheetModalRef} />
     </>
   );
@@ -154,6 +162,7 @@ const styles = StyleSheet.create({
     elevation: 4,
     position: 'absolute',
     bottom: 0,
+    zIndex:999
   },
   rowContainer: {
     justifyContent: 'center',

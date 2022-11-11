@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import {colors} from '../utils/constants/colors';
-import {width} from 'react-native-dimension';
+import {height, width} from 'react-native-dimension';
 
 const CustomInput = ({
   icon = false,
@@ -16,8 +16,31 @@ const CustomInput = ({
   value,
   onChangeText,
   secureTextEntry = false,
-  iconPressHandler
+  iconPressHandler,
+  multiline = false,
+  numberOfLines = 1
 }) => {
+  const styles = StyleSheet.create({
+    inputWrapper: {
+      flexDirection: 'row',
+      borderWidth: 1,
+      borderColor: colors.gray,
+      width: '90%',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      borderRadius: 6,
+      color: colors.black,
+      marginVertical: 10,
+    },
+    input: {
+      width: width(70),
+      height: multiline ?  height(15) : height(6),
+      paddingLeft: width(2),
+    },
+    inputIcon: {
+      marginRight: 15,
+    },
+  });
   return (
     <View style={styles.inputWrapper}>
       <TextInput
@@ -26,6 +49,9 @@ const CustomInput = ({
         value={value}
         placeholder={placeholder}
         secureTextEntry={secureTextEntry}
+        autoCapitalize={'none'}
+        multiline={multiline}
+        numberOfLines={numberOfLines}
       />
       {icon && (
         <Pressable style={{marginRight: width(3)}} onPress={iconPressHandler}>
@@ -34,27 +60,8 @@ const CustomInput = ({
       )}
     </View>
   );
+  
 };
 
 export default CustomInput;
 
-const styles = StyleSheet.create({
-  inputWrapper: {
-    flexDirection: 'row',
-    padding: 3,
-    borderWidth: 1,
-    borderColor: colors.lightGray,
-    width: '90%',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderRadius: 6,
-    color: colors.black,
-    marginVertical: 10,
-  },
-  input: {
-    width: width(70),
-  },
-  inputIcon: {
-    marginRight: 15,
-  },
-});

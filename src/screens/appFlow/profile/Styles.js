@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
     paddingLeft: width(2),
     borderRadius: 20,
     marginVertical: height(2),
+    
   },
 });
 export default styles;

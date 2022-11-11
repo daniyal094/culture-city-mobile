@@ -4,7 +4,7 @@ import {colors} from '../../../utils/constants/colors';
 const styles = StyleSheet.create({
   wraper: {
   flex:1,
-    backgroundColor: colors.lightGray,
+    backgroundColor: colors.white,
   },
   headerContainer: {
     backgroundColor: colors.primary,
@@ -19,9 +19,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: width(4),
+    paddingRight: width(4),
     marginTop: height(4),
     borderRadius: totalSize(2),
   },
+  listContainer:{
+    height:height(80),
+    paddingBottom:height(5),
+    marginTop:height(2)
+  }
 });
 export default styles;

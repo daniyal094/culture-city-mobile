@@ -20,7 +20,7 @@ const SignUpType = ({userTypeHandler}) => {
           </Text>
           <View style={{flexDirection: 'row', marginTop: 10}}>
             <Text>Sign up as an </Text>
-            <TouchableOpacity onPress={() => userTypeHandler('Event Seeker')}>
+            <TouchableOpacity onPress={() => userTypeHandler('Seeker')}>
               <Text style={{color: colors.secondary}}>Event Seeker</Text>
             </TouchableOpacity>
           </View>
@@ -31,8 +31,8 @@ const SignUpType = ({userTypeHandler}) => {
           <Text style={styles.boxHeading}>Bring culture to your city!</Text>
           <View style={{flexDirection: 'row', marginTop: 10}}>
             <Text>Sign up as an </Text>
-            <TouchableOpacity onPress={() => userTypeHandler('organiser')}>
-              <Text style={{color: colors.secondary}}>organiser</Text>
+            <TouchableOpacity onPress={() => userTypeHandler('Organizer')}>
+              <Text style={{color: colors.secondary}}>Organizer</Text>
             </TouchableOpacity>
           </View>
         </View>

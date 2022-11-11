@@ -3,31 +3,53 @@ import React from 'react';
 import NearFestivalCard from '../../../components/NearFestivalCard';
 import styles from './Styles';
 import Tile from '../../../components/Tile';
+import { width } from 'react-native-dimension';
 
-const ProfileView = () => {
+const ProfileView = ({userData}) => {
+  const memberSince = userData?.createdAt;
+  const date = new Date(memberSince);
+  const monthNames = [
+    'Jan',
+    'Feb',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'Aug',
+    'Sept',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
   return (
     <>
       <View style={styles.profileDetailContainer}>
         <View>
-          <Text style={styles.profileDetailHeading}>Culture</Text>
-          <Text style={styles.profileDetailInfo}>Ifugaw</Text>
+          <Text style={styles.profileDetailHeading}>Role</Text>
+          <Text style={styles.profileDetailInfo}>{userData?.role}</Text>
         </View>
         <View>
-          <Text style={styles.profileDetailHeading}>Locatation</Text>
-          <Text style={styles.profileDetailInfo}>Bataan </Text>
+          <Text style={styles.profileDetailHeading}>Approved</Text>
+          <Text style={styles.profileDetailInfo}>
+            {userData?.isApproved ? 'Yes' : 'NO'}{' '}
+          </Text>
         </View>
         <View>
           <Text style={styles.profileDetailHeading}>Member Since</Text>
-          <Text style={styles.profileDetailInfo}>Yesterday</Text>
+          <Text style={styles.profileDetailInfo}>{`${date.getFullYear()}-${
+            monthNames[date.getMonth()]
+          }-${date.getDate()}`}</Text>
         </View>
       </View>
-      <Text style={styles.tagHeading}>Cultures</Text>
+      <Text style={styles.tagHeading}>Profile Bio</Text>
       <View style={styles.tileContainer}>
-        <Tile label={'Canadian'} />
+      <Text style={{...styles.profileDetailInfo,textAlign:'justify',marginLeft:width(2)}}>{userData?.bio}</Text>
+        {/* <Tile label={'Canadian'} />
         <Tile label={'Argentinian'} />
         <Tile label={'Italian'} />
         <Tile label={'Canadian'} />
-        <Tile label={'Italian'} />
+        <Tile label={'Italian'} /> */}
       </View>
 
       <View style={styles.historyContainer}>
@@ -35,7 +57,7 @@ const ProfileView = () => {
         <FlatList
           numColumns={1}
           data={[1, 2, 3, 4, 5, 6, 7, 8]}
-          renderItem={NearFestivalCard}
+          renderItem={({item}) => <NearFestivalCard item={item} />}
           horizontal={true}
           keyExtractor={item => item.id}
           showsHorizontalScrollIndicator={false}

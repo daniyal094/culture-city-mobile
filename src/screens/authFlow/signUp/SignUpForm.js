@@ -11,9 +11,17 @@ import {routes} from '../../../utils/constants/routes';
 import {useNavigation} from '@react-navigation/native';
 import FeatherIcons from 'react-native-vector-icons/Feather';
 
-const SignUpForm = () => {
+const SignUpForm = ({isSignUpLoading, slectUserType, registerUser}) => {
+  console.log(slectUserType);
   const [isChecked, setisChecked] = useState(false);
-  const [showPass, setshowPass] = useState(false);
+  const [showPass, setshowPass] = useState(true);
+  const [registerData, setregisterData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPass: '',
+  });
   const navigation = useNavigation();
 
   return (
@@ -27,7 +35,8 @@ const SignUpForm = () => {
               marginBottom: height(2),
             }}>
             <View style={{width: width(50), alignItems: 'center'}}>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate(routes.signin)}>
                 <Text>Login</Text>
               </TouchableOpacity>
             </View>
@@ -37,8 +46,36 @@ const SignUpForm = () => {
               </TouchableOpacity>
             </View>
           </View>
-          <CustomInput placeholder="Full Name" />
-          <CustomInput placeholder="Example@example.com" />
+          <CustomInput
+            placeholder="First Name"
+            value={registerData.firstName}
+            onChangeText={value =>
+              setregisterData({...registerData, firstName: value})
+            }
+          />
+          <CustomInput
+            placeholder="Last Name"
+            value={registerData.lastName}
+            onChangeText={value =>
+              setregisterData({...registerData, lastName: value})
+            }
+          />
+          <CustomInput
+            placeholder="Example@example.com"
+            value={registerData.email}
+            onChangeText={value =>
+              setregisterData({...registerData, email: value})
+            }
+          />
+          {slectUserType === 'Organizer' && (
+            <CustomInput
+              placeholder="Organization"
+              value={registerData.organization}
+              onChangeText={value =>
+                setregisterData({...registerData, organization: value})
+              }
+            />
+          )}
           <CustomInput
             icon={
               showPass ? (
@@ -50,8 +87,19 @@ const SignUpForm = () => {
             placeholder="Password"
             secureTextEntry={showPass}
             iconPressHandler={() => setshowPass(!showPass)}
+            value={registerData.password}
+            onChangeText={value =>
+              setregisterData({...registerData, password: value})
+            }
           />
-          <CustomInput placeholder="Password Confirm" />
+          <CustomInput
+            placeholder="Password Confirm"
+            secureTextEntry={showPass}
+            value={registerData.confirmPass}
+            onChangeText={value =>
+              setregisterData({...registerData, confirmPass: value})
+            }
+          />
 
           <View
             style={{
@@ -72,8 +120,9 @@ const SignUpForm = () => {
           <CustomButton
             labeColor={colors.light}
             bgColor={colors.secondary}
-            onPress={() => navigation.navigate(routes.profileInterest)}
+            onPress={() => registerUser(registerData,isChecked)}
             label="Sign Up"
+            loading={isSignUpLoading}
           />
         </View>
         <Text style={{textAlign: 'center'}}>OR Sign in with</Text>

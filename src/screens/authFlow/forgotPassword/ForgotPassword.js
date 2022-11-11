@@ -1,15 +1,36 @@
 import {View, Text, Image, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './Styles';
 import forgotImg from '.././../../assets/images/forgotImg.png';
 import CustomInput from '../../../components/CustomInput';
 import CustomButton from '../../../components/CustomButton';
 import {colors} from '../../../utils/constants/colors';
-import { height } from 'react-native-dimension';
-import { useNavigation } from '@react-navigation/native';
-import { routes } from '../../../utils/constants/routes';
+import {height} from 'react-native-dimension';
+import {useNavigation} from '@react-navigation/native';
+import useAuthApi from '../../../utils/api/auth.api';
+import {routes} from '../../../utils/constants/routes';
 const ForgotPassword = () => {
-  const navigation = useNavigation()
+  const [email, setEmail] = useState('');
+  const navigation = useNavigation();
+  const {useHandleForgotPasswordApi} = useAuthApi();
+  const {
+    isLoading: isForgotLoading,
+    mutate,
+    isSuccess,
+  } = useHandleForgotPasswordApi();
+  useEffect(() => {
+    if (isSuccess) {
+      navigation.navigate(routes.newPass, {
+        email: email,
+      });
+    }
+  }, [isSuccess]);
+  const forgotPasswordHandler = () => {
+    const apiData = {
+      email: email,
+    };
+    mutate(apiData);
+  };
   return (
     <View style={styles.wraper}>
       <View style={styles.bodyContainer}>
@@ -18,12 +39,17 @@ const ForgotPassword = () => {
         <Text style={styles.subHeading}>
           We have sent a Reset password link to your email account.
         </Text>
-        <CustomInput placeholder="Example@example.com" />
+        <CustomInput
+          placeholder="Example@example.com"
+          value={email}
+          onChangeText={setEmail}
+        />
         <CustomButton
           labeColor={colors.light}
           bgColor={colors.secondary}
-          onPress={() => navigation.navigate(routes.errorForgotPass)}
+          onPress={forgotPasswordHandler}
           label="Submit"
+          loading={isForgotLoading}
         />
       </View>
       <View

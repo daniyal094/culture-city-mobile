@@ -3,17 +3,20 @@ import React from 'react';
 import { height, totalSize, width } from 'react-native-dimension';
 import { colors } from '../utils/constants/colors';
 
-const CalanderBox = () => {
+const CalanderBox = ({date = '24',month = 11}) => {
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
   return (
     <View style={styles.calander}>
       <View style={styles.calanderHeader}>
         <Text style={{fontSize: totalSize(0.9), color: colors.white}}>
-          December
+          {monthNames[month]}
         </Text>
       </View>
       <View style={styles.calanderBody}>
         <Text style={{fontWeight: '600', color: colors.black, fontSize: 22}}>
-          24
+          {date}
         </Text>
       </View>
     </View>
@@ -32,6 +35,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     marginRight: 10,
     marginTop: 10,
+    elevation:2
   },
   calanderHeader: {
     backgroundColor: colors.danger,

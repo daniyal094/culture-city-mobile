@@ -5,25 +5,34 @@ import {height, totalSize, width} from 'react-native-dimension';
 import eventImg from '../assets/images/eventImg.png';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import CalanderBox from './CalanderBox';
-import { useNavigation } from '@react-navigation/native';
-import { routes } from '../utils/constants/routes';
-const EventCard = () => {
-  const navigation = useNavigation()
+import {useNavigation} from '@react-navigation/native';
+import {routes} from '../utils/constants/routes';
+import {MEDIA_BASE_URL} from '../utils/constants/enums';
+const EventCard = ({data}) => {
+  const navigation = useNavigation();
+  const date = new Date(data?.startDateTime);
+  const imgSrc = data?.media?.length > 0  && `${MEDIA_BASE_URL}${data?.media[0]}`;
+  console.log('data', data);
   return (
     <View style={styles.cardContainer}>
       <View>
-        <Image source={eventImg} resizeMode="contain" />
+        <Image
+          source={data?.media?.length > 0 ? {uri: imgSrc} : eventImg}
+          resizeMode="cover"
+          style={{width: width(20), height: height(11), borderRadius: 10}}
+        />
         <View style={{position: 'absolute', left: 0, bottom: -1}}>
-          <CalanderBox />
+          <CalanderBox date={date.getDate()} month={date.getMonth()} />
         </View>
       </View>
       <View style={styles.detailSection}>
-        <Text style={styles.heading}>Makulay Festivals</Text>
-        <Text style={styles.subHeading}>Pilar, Bataan 2mi</Text>
-        <Text style={styles.detail}>
-          Travel the world one bite at a time! Join us for‘Curry{' '}
-        </Text>
-        <Pressable onPress={() => navigation.navigate(routes.eventDetail)}>
+        <Text style={styles.heading}>{data?.title}</Text>
+        <Text style={styles.subHeading}>{data?.eventType}</Text>
+        <Text style={styles.detail}>{data?.about}</Text>
+        <Pressable
+          onPress={() =>
+            navigation.navigate(routes.eventDetail, {id: data?._id})
+          }>
           <Text style={styles.detailLink}>View Details </Text>
         </Pressable>
       </View>
