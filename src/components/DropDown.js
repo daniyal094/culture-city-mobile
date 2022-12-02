@@ -1,19 +1,20 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {colors} from '../utils/constants/colors';
 
 const DropDown = ({
   list,
-  extraData,
+  extraData = {},
   setState,
   stateKey,
   newStyles,
   placeholder = 'Select an item',
   zIndex,
-  zIndexInverse
+  zIndexInverse,
+  defaultVlue
 }) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState(defaultVlue);
   const [items, setItems] = useState(list);
 
   const clickHandler = item => {
@@ -21,7 +22,12 @@ const DropDown = ({
     setState({...extraData, [stateKey]: item()});
   };
 
+  useEffect(() => {
+    setValue(defaultVlue);
+  }, [defaultVlue]);
+
   return (
+    
     <DropDownPicker
       open={open}
       value={value}
@@ -31,6 +37,8 @@ const DropDown = ({
       setItems={setItems}
       placeholderStyle={{color: colors.disableColor, opacity: 0.5}}
       arrowIconStyle={{opacity: 0.3}}
+      searchable={items?.length > 4}
+      listMode="SCROLLVIEW"
       style={{
         ...newStyles,
         width: '90%',
@@ -45,6 +53,7 @@ const DropDown = ({
       placeholder={placeholder}
       zIndex={zIndex}
       zIndexInverse={zIndexInverse}
+      
     />
   );
 };

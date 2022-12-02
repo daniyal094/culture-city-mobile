@@ -2,10 +2,11 @@ import {View, Text, FlatList} from 'react-native';
 import React from 'react';
 import NearFestivalCard from '../../../components/NearFestivalCard';
 import styles from './Styles';
-import Tile from '../../../components/Tile';
 import { width } from 'react-native-dimension';
-
+import useEventApi from '../../../utils/api/event.api';
 const ProfileView = ({userData}) => {
+  const {useFetchNearByEventsService} = useEventApi();
+const {isLoading: isLoadingNearByEvent, data: nearByEvents} = useFetchNearByEventsService();
   const memberSince = userData?.createdAt;
   const date = new Date(memberSince);
   const monthNames = [
@@ -53,10 +54,10 @@ const ProfileView = ({userData}) => {
       </View>
 
       <View style={styles.historyContainer}>
-        <Text style={styles.historyHeading}>Event History </Text>
+        <Text style={styles.historyHeading}>Nearby Events</Text>
         <FlatList
           numColumns={1}
-          data={[1, 2, 3, 4, 5, 6, 7, 8]}
+          data={nearByEvents || []}
           renderItem={({item}) => <NearFestivalCard item={item} />}
           horizontal={true}
           keyExtractor={item => item.id}

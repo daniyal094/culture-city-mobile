@@ -6,11 +6,13 @@ import {colors} from '../utils/constants/colors';
 import AntIcon from 'react-native-vector-icons/dist/AntDesign';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import CustomButton from './CustomButton';
-const BookEventModal = ({bottomSheetModalRef}) => {
+import DropDown from './DropDown';
+const BookEventModal = ({bottomSheetModalRef, data}) => {
   // Ticket Counter
   const [counter, setcounter] = useState(0);
+  const [ticketType, setticketType] = useState('');
   // variables
-  const snapPoints = useMemo(() => ['64%', '64%'], []);
+  const snapPoints = useMemo(() => ['54%', '54%'], []);
 
   // callbacks
   const closeHandler = useCallback(() => {
@@ -49,7 +51,7 @@ const BookEventModal = ({bottomSheetModalRef}) => {
                   <Text>Close</Text>
                 </View>
               </Pressable>
-              <Text style={styles.EventHeading}>Makulay Festival</Text>
+              <Text style={styles.EventHeading}>{data?.title}</Text>
               <View style={styles.flexRow}>
                 <Entypo
                   name="location-pin"
@@ -57,9 +59,8 @@ const BookEventModal = ({bottomSheetModalRef}) => {
                   size={totalSize(2)}
                 />
                 <Text style={{color: colors.disableColor}}>
-                  Pilar Bataan Phillipines |{' '}
+                  {data?.timezone} (Timezone) 
                 </Text>
-                <Text style={{color: colors.secondary}}>Get Direction </Text>
               </View>
               <View style={{...styles.flexRow, marginTop: height(1)}}>
                 <Text style={{color: colors.black, fontWeight: '500'}}>
@@ -67,7 +68,7 @@ const BookEventModal = ({bottomSheetModalRef}) => {
                 </Text>
                 <Text
                   style={{color: colors.disableColor, marginLeft: width(2)}}>
-                  September 11, 2021 at 12:30 pm
+                  {data?.startDateTime}
                 </Text>
               </View>
               <View style={{...styles.flexRow, marginTop: height(0.5)}}>
@@ -76,7 +77,7 @@ const BookEventModal = ({bottomSheetModalRef}) => {
                 </Text>
                 <Text
                   style={{color: colors.disableColor, marginLeft: width(3.3)}}>
-                  September 11, 2021 at 1:30 pm
+                  {data?.endDateTime}
                 </Text>
               </View>
             </View>
@@ -119,6 +120,15 @@ const BookEventModal = ({bottomSheetModalRef}) => {
                 </Pressable>
               </View>
             </View>
+            {!data?.tickets?.isFree && (
+              <DropDown
+                list={data?.tickets?.categories?.map(item => {
+                  return {label: item?.name, value: item};
+                })}
+                setState={setticketType}
+                stateKey="ticketType"
+              />
+            )}
             <View style={styles.btnContainer}>
               <CustomButton
                 labeColor={colors.light}

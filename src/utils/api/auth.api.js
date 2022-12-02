@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {routes} from '../constants/routes';
 import {setAsyncStorage} from '../helper/functions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CommonActions} from '@react-navigation/native';
 export default useAuthApi = () => {
   const navigation = useNavigation();
   const useHandleLoginApi = () => {
@@ -15,7 +16,11 @@ export default useAuthApi = () => {
     const onSuccess = response => {
       Toast.show(response.data?.message);
       setAsyncStorage('user', response?.data?.data);
-      navigation.navigate(routes.app);
+      if (response?.data?.data?.user?.isApproved) {
+        navigation.navigate(routes.app);
+      } else {
+        navigation.navigate(routes.verification);
+      }
     };
     const onError = error => {
       let err = error?.response?.data?.message;
@@ -111,27 +116,38 @@ export default useAuthApi = () => {
   };
 
   const useHandleLogOutApi = () => {
-    const handleLoginService = id => {
+    const handleLogoutService = id => {
       return axiosInstance.post(`/auth/logout?userId=${id}`);
     };
 
     const onSuccess = response => {
       Toast.show(response.data?.message);
       AsyncStorage.clear();
-      navigation.navigate(routes.auth);
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: routes.auth}],
+        }),
+      );
+      // navigation.navigate(routes.auth);
     };
     const onError = error => {
-      console.log(error?.request.status);
       if (error?.request.status === 401) {
         Toast.show('logout Successfull');
-        navigation.navigate(routes.auth);
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: routes.auth}],
+          }),
+        );
+        // navigation.navigate(routes.auth);
       } else {
         let err = error.response.data?.message;
         Toast.show(Array.isArray(err) ? err[0] : err);
       }
     };
 
-    return useMutation(id => handleLoginService(id), {
+    return useMutation(id => handleLogoutService(id), {
       onSuccess,
       onError,
     });
@@ -146,8 +162,9 @@ export default useAuthApi = () => {
     };
 
     const onSuccess = response => {
-      Toast.show(response.data?.message);
-      navigation.navigate(routes.app);
+      Toast.show('success full verification Please login again');
+      navigation.navigate(routes.signin);
+      AsyncStorage.clear();
     };
     const onError = error => {
       let err = error.response.data?.message;

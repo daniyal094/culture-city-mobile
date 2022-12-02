@@ -1,15 +1,18 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Evenet from '../assets/images/Evenet.png';
 import {height, width} from 'react-native-dimension';
 import {colors} from '../utils/constants/colors';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import CalanderBox from './CalanderBox';
-import { MEDIA_BASE_URL } from '../utils/constants/enums';
+import {MEDIA_BASE_URL} from '../utils/constants/enums';
+import {useNavigation} from '@react-navigation/native';
+import { routes } from '../utils/constants/routes';
 const FestivalCardBg = ({data}) => {
-  console.log("data",data);
+  const navigation = useNavigation();
   const imgSrc =
     data?.media?.length > 0 && `${MEDIA_BASE_URL}${data?.media[0]}`;
+  const date = new Date(data?.startDateTime);
   return (
     <View style={styles.container}>
       <Image
@@ -23,20 +26,23 @@ const FestivalCardBg = ({data}) => {
           justifyContent: 'space-between',
           height: height(27),
           position: 'absolute',
+          width: '100%',
         }}>
-        <CalanderBox />
+        <CalanderBox date={date.getDate()} month={date.getMonth()} />
         <View style={styles.detailContainer}>
           <Text style={styles.cardHeading}>{data?.title}</Text>
-          <Text style={styles.cardDetailText}>
-            {data?.about}
-          </Text>
+          <Text style={styles.cardDetailText}>{data?.about}</Text>
           <View style={{justifyContent: 'flex-end', flexDirection: 'row'}}>
-            <View style={styles.iconContainer}>
+            {/* <View style={styles.iconContainer}>
               <Icon name="favorite" size={14} color="#900" />
-            </View>
-            <View style={styles.iconContainer}>
+            </View> */}
+            <Pressable
+              style={styles.iconContainer}
+              onPress={() =>
+                navigation.navigate(routes.eventDetail, {id: data?._id})
+              }>
               <Icon name="arrow-forward-ios" size={14} color="#9BA1AF" />
-            </View>
+            </Pressable>
           </View>
         </View>
       </View>
@@ -50,7 +56,7 @@ const styles = StyleSheet.create({
   container: {
     width: width(50),
     height: height(27),
-    marginHorizontal: width(1),
+    marginHorizontal: width(2),
     borderRadius: 10,
   },
   imgBackgroundContainer: {
@@ -69,6 +75,7 @@ const styles = StyleSheet.create({
   detailContainer: {
     paddingHorizontal: width(4),
     marginBottom: height(1),
+    width: '100%',
   },
   cardDetailText: {
     color: colors.white,

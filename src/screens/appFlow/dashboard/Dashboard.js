@@ -18,13 +18,13 @@ import {height, totalSize, width} from 'react-native-dimension';
 import FestivalCardBg from '../../../components/FestivalCardBg';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import NearFestivalCard from '../../../components/NearFestivalCard';
-import festival from '../../../assets/images/festival.png';
 import TabBar from '../../../components/TabBar';
 import SliderWithDynamicChild from '../../../components/SliderWithDynamicChild';
 import useEventApi from '../../../utils/api/event.api';
 import {colors} from '../../../utils/constants/colors';
 import {useNavigation} from '@react-navigation/native';
 import {routes} from '../../../utils/constants/routes';
+import UpcomingCard from '../../../components/UpcomingCard';
 const Dashboard = () => {
   const {useFetchHomeEventsService, useFetchNearByEventsService} =
     useEventApi();
@@ -33,7 +33,7 @@ const Dashboard = () => {
   const {isLoading: isLoadingNearByEvent, data: nearByEvents} =
     useFetchNearByEventsService();
   const [selectedtab, setselectedtab] = useState('Featured');
-  const [tabData, settabData] = useState(['One']);
+  const [tabData, settabData] = useState(nearByEvents);
 
   const navigation = useNavigation();
   const dataList = [
@@ -66,24 +66,23 @@ const Dashboard = () => {
       img: banner4,
     },
   ];
-  console.log('homeEvents', homeEvents);
-  console.log('nearByEvents', nearByEvents);
+
   useEffect(() => {
-    settabData(nearByEvents);
+    settabData(homeEvents?.featuredEvents);
   }, [isLoadingHomeEvent]);
 
   const tabChageHandler = tabName => {
     setselectedtab(tabName);
     if (tabName === 'Featured') {
-      // settabData(homeEvents?.featuredEvents);
-      settabData(nearByEvents);
+      settabData(homeEvents?.featuredEvents);
+      // settabData(nearByEvents);
     }
     if (tabName === 'Populer') {
       settabData(homeEvents?.popularEvents);
     }
-    if (tabName === 'Upcoming') {
-      settabData(homeEvents?.upcomingEvents);
-    }
+    // if (tabName === 'Upcoming') {
+    //   settabData(homeEvents?.upcomingEvents);
+    // }
   };
   const RenderItem = ({item}) => {
     return (
@@ -121,7 +120,7 @@ const Dashboard = () => {
             containerHeight={height(30)}
             containerWidth={width(100)}
           />
-          {isLoadingHomeEvent ? (
+          {isLoadingHomeEvent || isLoadingNearByEvent ? (
             <View
               style={{
                 height: height(60),
@@ -135,9 +134,10 @@ const Dashboard = () => {
               <View style={styles.secondSection}>
                 {/* Tabs List */}
                 <View style={styles.tabListContainer}>
-                  {['Featured', 'Populer', 'Upcoming'].map((item, idx) => (
+                  {['Featured', 'Populer'].map((item, idx) => (
                     <TouchableOpacity
                       style={styles.tabListItem}
+                      key={idx + 1}
                       onPress={() => tabChageHandler(item)}>
                       <Text
                         style={{
@@ -161,7 +161,7 @@ const Dashboard = () => {
                   horizontal={true}
                   keyExtractor={item => item.id}
                   showsHorizontalScrollIndicator={false}
-                  style={{marginTop: height(2)}}
+                  style={{marginTop: height(1)}}
                 />
                 {tabData?.length < 1 && (
                   <View
@@ -189,18 +189,13 @@ const Dashboard = () => {
               </View>
 
               <View style={styles.secondSection}>
-                <Text style={styles.heading}>Get Inspired</Text>
-
-                <ImageBackground
-                  source={festival}
-                  resizeMode="cover"
-                  style={{
-                    width: width(90),
-                    height: height(25),
-                    alignSelf: 'center',
-                    marginTop: 10,
-                  }}
-                  imageStyle={{borderRadius: 10}}></ImageBackground>
+                <Text style={styles.heading}>Upcoming</Text>
+                <SliderWithDynamicChild
+                  data={homeEvents?.upcomingEvents || []}
+                  RenderItem={UpcomingCard}
+                  containerHeight={height(25)}
+                  containerWidth={width(90)}
+                />
               </View>
               <Text style={styles.heading}>Events near you </Text>
               <View style={{marginLeft: width(4), marginBottom: height(10)}}>

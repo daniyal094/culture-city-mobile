@@ -7,16 +7,17 @@ import FontAwesome5 from 'react-native-vector-icons/dist/FontAwesome5';
 import {totalSize} from 'react-native-dimension';
 import {colors} from '../../../utils/constants/colors';
 import {useNavigation} from '@react-navigation/native';
-import Evenet from '../../../assets/images/Evenet.png';
 import ProfileView from './ProfileView';
 import ProfileEdit from './ProfileEdit';
 import {getAsyncStorage} from '../../../utils/helper/functions';
 import { MEDIA_BASE_URL } from '../../../utils/constants/enums';
+import useEventApi from '../../../utils/api/auth.api'
 const Profile = () => {
   const [user, setuser] = useState('');
-  console.log(user);
-  const navigation = useNavigation();
   const [isEdit, setisEdit] = useState(false);
+  const navigation = useNavigation();
+
+  console.log(user);
   const backHandler = () => {
     if (!isEdit) {
       navigation.goBack();
@@ -35,7 +36,7 @@ const Profile = () => {
   return (
     <>
       <View style={styles.wraper}>
-        <ScrollView>
+        {/* <ScrollView> */}
           <View style={styles.headerContainer}>
             <Pressable
               style={{flexDirection: 'row', alignItems: 'center'}}
@@ -80,7 +81,7 @@ const Profile = () => {
               setisEdit={value => setisEdit(value)}
             />
           )}
-        </ScrollView>
+        {/* </ScrollView> */}
       </View>
       <TabBar selectedTab={'Profile'} />
     </>

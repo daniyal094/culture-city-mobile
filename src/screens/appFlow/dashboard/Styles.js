@@ -57,7 +57,8 @@ const styles = StyleSheet.create({
     fontWeight:'600',
     fontSize:16,
     marginHorizontal:width(5),
-    marginTop:height(2)
+    marginTop:height(2),
+    marginBottom:height(1)
   }
 });
 export default styles;

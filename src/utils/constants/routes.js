@@ -22,4 +22,7 @@ export const routes = {
   eventList:'eventList',
   myBooking : 'myBooking',
   myBookmark:'myBookmark',
+  direction : 'direction',
+  addEvent : 'addEvent',
+  myEvents : 'myEvents'
 };

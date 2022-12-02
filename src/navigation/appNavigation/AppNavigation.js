@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Dashboard from '../../screens/appFlow/dashboard/Dashboard';
 import {routes} from '../../utils/constants/routes';
@@ -12,6 +12,9 @@ import AboutUs from '../../screens/appFlow/aboutUs/AboutUs';
 import Event from '../../screens/appFlow/event/Event';
 import MyBooking from '../../screens/appFlow/myBooking/MyBooking';
 import MyBookmark from '../../screens/appFlow/myBookmark/MyBookmark';
+import GetDirection from '../../screens/appFlow/getDirection/GetDirection';
+import AddEvent from '../../screens/appFlow/addEvent/AddEvent';
+import MyEvents from '../../screens/appFlow/myEvents/MyEvents';
 
 const AppStack = createNativeStackNavigator();
 
@@ -34,6 +37,10 @@ const AppNavigation = () => {
       <AppStack.Screen name={routes.eventList} component={Event} />
       <AppStack.Screen name={routes.myBooking} component={MyBooking} />
       <AppStack.Screen name={routes.myBookmark} component={MyBookmark} />
+      <AppStack.Screen name={routes.direction} component={GetDirection} />
+      <AppStack.Screen name={routes.addEvent} component={AddEvent} />
+      <AppStack.Screen name={routes.myEvents} component={MyEvents} />
+    
     </AppStack.Navigator>
   );
 };

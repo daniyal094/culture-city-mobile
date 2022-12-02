@@ -1,16 +1,18 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-platform :ios, '12.4'
+platform :ios, '13.0'
 install! 'cocoapods', :deterministic_uuids => false
 
 target 'culturecity' do
   config = use_native_modules!
-
+  rn_maps_path = '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', :path => rn_maps_path
   # Flags change depending on the env values.
   flags = get_default_flags()
 
   use_react_native!(
+
     :path => config[:reactNativePath],
     # Hermes is now enabled by default. Disable by setting this flag to false.
     # Upcoming versions of React Native may rely on get_default_flags(), but
@@ -38,6 +40,9 @@ target 'culturecity' do
       # necessary for Mac Catalyst builds
       :mac_catalyst_enabled => false
     )
+    installer.pods_project.build_configurations.each do |config|
+      config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+    end
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
 end

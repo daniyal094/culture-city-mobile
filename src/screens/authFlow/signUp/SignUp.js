@@ -9,7 +9,7 @@ import SimpleToast from 'react-native-simple-toast';
 const SignUp = () => {
   const [slectUserType, setslectUserType] = useState(null);
   const {useHandleSignUpApi} = useAuthApi();
-  const {isLoading: isSignUpLoading, mutate} = useHandleSignUpApi();
+  const {isLoading: isSignUpLoading,mutate} = useHandleSignUpApi();
   const userTypeHandler = type => {
     setslectUserType(type);
   };

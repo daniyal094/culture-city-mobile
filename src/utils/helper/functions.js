@@ -24,6 +24,18 @@ export const getAsyncStorage = async key => {
   return JSON.parse(value);
 };
 
+// get DropDownObjArray
 
-
-
+export const getDropDownObj = (data, labelName = false) => {
+  console.log(labelName);
+  if (data?.length > 0) {
+    return data?.map(i => {
+      return {label: labelName ? i[labelName] : i, value: i};
+    });
+  } else {
+    return [{
+      label: '',
+      value: '',
+    }];
+  }
+};

@@ -3,7 +3,8 @@ import axiosInstance from '../config/axios-instance';
 import Toast from 'react-native-simple-toast';
 import {useNavigation} from '@react-navigation/native';
 import {routes} from '../constants/routes';
-export default useEventApi = () => {
+import AsyncStorage from '@react-native-async-storage/async-storage';
+export default useUserApi = () => {
   const navigation = useNavigation();
   const useHandleGetUserByIdApi = () => {
     const handleGetUserByIdService = id => {
@@ -38,10 +39,11 @@ export default useEventApi = () => {
       Toast.show(response.data?.message);
     };
     const onError = error => {
+ 
       if (error?.request.status === 401) {
         AsyncStorage.clear();
-        Toast.show('Session Expired 401');
         navigation.navigate(routes.auth);
+        Toast.show('Session Expired');
       }
       else{
       console.log(error);

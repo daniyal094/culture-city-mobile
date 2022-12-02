@@ -1,5 +1,5 @@
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import CustomInput from '../../../components/CustomInput';
 import Eye from '../../../assets/icons/Eye.png';
 import {height, width} from 'react-native-dimension';
@@ -10,6 +10,9 @@ import styles from './Styles';
 import {routes} from '../../../utils/constants/routes';
 import {useNavigation} from '@react-navigation/native';
 import FeatherIcons from 'react-native-vector-icons/Feather';
+import DropDown from '../../../components/DropDown';
+import {countries} from '../../../utils/constants/countries';
+import TermsAndCondition from '../../../components/TermsAndCondition';
 
 const SignUpForm = ({isSignUpLoading, slectUserType, registerUser}) => {
   console.log(slectUserType);
@@ -21,8 +24,16 @@ const SignUpForm = ({isSignUpLoading, slectUserType, registerUser}) => {
     email: '',
     password: '',
     confirmPass: '',
+    country: '',
+    organization:  '',
   });
+  const bottomSheetModalRef = useRef(null);
+
   const navigation = useNavigation();
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
 
   return (
     <View style={styles.bodyContainer}>
@@ -66,6 +77,16 @@ const SignUpForm = ({isSignUpLoading, slectUserType, registerUser}) => {
             onChangeText={value =>
               setregisterData({...registerData, email: value})
             }
+          />
+       
+          <DropDown
+            list={countries?.map(item => {
+              return {label: item?.name, value: item?._id};
+            })}
+            extraData={registerData}
+            setState={setregisterData}
+            stateKey="country"
+            placeholder='country'
           />
           {slectUserType === 'Organizer' && (
             <CustomInput
@@ -113,14 +134,14 @@ const SignUpForm = ({isSignUpLoading, slectUserType, registerUser}) => {
               onChange={() => setisChecked(!isChecked)}
               label="I agree to the"
               linkedLabel="Terms and Condition"
-              linkPress={() => alert('ENTER')}
+              linkPress={() => handlePresentModalPress()}
             />
           </View>
 
           <CustomButton
             labeColor={colors.light}
             bgColor={colors.secondary}
-            onPress={() => registerUser(registerData,isChecked)}
+            onPress={() => registerUser(registerData, isChecked)}
             label="Sign Up"
             loading={isSignUpLoading}
           />
@@ -170,6 +191,7 @@ const SignUpForm = ({isSignUpLoading, slectUserType, registerUser}) => {
           </View>
         </View>
       </ScrollView>
+      <TermsAndCondition bottomSheetModalRef={bottomSheetModalRef} />
     </View>
   );
 };

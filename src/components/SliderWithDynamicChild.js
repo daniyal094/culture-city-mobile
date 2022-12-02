@@ -17,15 +17,15 @@ const infiniteLoop = dataList => {
       (scrollValue = 0), (scrolled = 0);
     }
     this.flatList.scrollToOffset({animated: true, offset: scrollValue});
-  }, 4000);
+  }, 8000);
 };
 
-const SliderWithDynamicChild = ({
+function SliderWithDynamicChild  ({
   data,
   RenderItem,
   containerHeight = 100,
   containerWidth = '100%',
-}) => {
+})  {
   const [dataList, setdataList] = useState(data);
   const scrollX = new Animated.Value(0);
   let position = Animated.divide(scrollX, width);

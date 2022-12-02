@@ -6,14 +6,12 @@ import {
   Pressable,
   ActivityIndicator,
 } from 'react-native';
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback, useRef, useState, useEffect} from 'react';
 import styles from './Styles';
 import eventDetail from '../../../assets/images/eventDetail.png';
-import Evenet from '../../../assets/images/Evenet.png';
 import {colors} from '../../../utils/constants/colors';
 import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 import {height, totalSize, width} from 'react-native-dimension';
-// import Ionicons from 'react-native-vector-icons/dist/Ionicons';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import CustomButton from '../../../components/CustomButton';
 import BookEventModal from '../../../components/BookEventModal';
@@ -21,14 +19,31 @@ import AntIcon from 'react-native-vector-icons/dist/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import useEventApi from '../../../utils/api/event.api';
 import {MEDIA_BASE_URL} from '../../../utils/constants/enums';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {routes} from '../../../utils/constants/routes';
+
 const EventDetail = props => {
+  const [user, setuser] = useState(null);
   const propsData = props.route.params;
   const navigation = useNavigation();
   const bottomSheetModalRef = useRef(null);
-  const {useFetchEventByIdService} = useEventApi();
-  const {isLoading: isEventDeatilLoading, data} = useFetchEventByIdService(
-    propsData.id,
-  );
+  const {useFetchEventByIdService, useFetchFavStatusEventsService} =
+    useEventApi();
+  const {
+    isLoading: isEventDeatilLoading,
+    data,
+    isSuccess,
+  } = useFetchEventByIdService(propsData.id);
+  const {
+    isLoading: isfavStatusLoading,
+    data: fevStatusData,
+    mutate,
+  } = useFetchFavStatusEventsService();
+  console.log('fevStatusData', fevStatusData);
+  const getAsyncStorage = async () => {
+    const res = await AsyncStorage.getItem('user');
+    setuser(JSON.parse(res)?.user);
+  };
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
@@ -37,6 +52,17 @@ const EventDetail = props => {
   const imgProfile = !data?.creator?.profilePicture?.isCompleteUrl
     ? `${MEDIA_BASE_URL}${data?.creator?.profilePicture?.url}`
     : data?.creator?.profilePicture?.url;
+
+  useEffect(() => {
+    getAsyncStorage();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      console.log('mutaion data for fav ', user?._id, propsData.id);
+      // mutate(user, propsData.id);
+    }
+  }, [user]);
 
   return (
     <>
@@ -75,7 +101,9 @@ const EventDetail = props => {
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <Image
                       source={
-                        data?.media?.length > 0 ? {uri: imgProfile} : eventDetail
+                        data?.media?.length > 0
+                          ? {uri: imgProfile}
+                          : eventDetail
                       }
                       resizeMode="cover"
                       style={styles.profilePicture}
@@ -121,7 +149,15 @@ const EventDetail = props => {
                   <Text style={{color: colors.disableColor}}>
                     {data?.timezone} (Timezone) |
                   </Text>
-                  <Text style={{color: colors.secondary}}> Get Direction </Text>
+                  <Pressable
+                    onPress={() =>
+                      navigation.navigate(routes.direction, {data: data})
+                    }>
+                    <Text style={{color: colors.secondary}}>
+                      {' '}
+                      Get Direction{' '}
+                    </Text>
+                  </Pressable>
                 </View>
                 <View style={{...styles.flexRow, marginTop: height(1)}}>
                   <Text style={{color: colors.black, fontWeight: '500'}}>
@@ -153,20 +189,25 @@ const EventDetail = props => {
                 }}></View>
 
               <Text style={styles.discription}>{data?.about}</Text>
-              <View style={styles.btnContainer}>
-                <CustomButton
-                  labeColor={colors.light}
-                  bgColor={colors.secondary}
-                  onPress={() => {
-                    handlePresentModalPress();
-                  }}
-                  label="Book this Event"
-                  // loading={isLoginLoading}
-                />
-              </View>
+              {user?.role !== 'Organizer' && (
+                <View style={styles.btnContainer}>
+                  <CustomButton
+                    labeColor={colors.light}
+                    bgColor={colors.secondary}
+                    onPress={() => {
+                      handlePresentModalPress();
+                    }}
+                    label="Book this Event"
+                    // loading={isLoginLoading}
+                  />
+                </View>
+              )}
             </ScrollView>
           </View>
-          <BookEventModal bottomSheetModalRef={bottomSheetModalRef} />
+          <BookEventModal
+            bottomSheetModalRef={bottomSheetModalRef}
+            data={data}
+          />
         </>
       )}
     </>

@@ -26,13 +26,13 @@ const responseHandler = async response => {
 const errorHandler =  err => {
   // if (err.response.status === 401) {
   //   Toast.show('Session Expired 401');
-  //   AsyncStorage.clear();
+    // AsyncStorage.clear();
   // } 
   // else if (err.response.status === 403) {
   //   Toast.show('Session Expired 403');
   //   // AsyncStorage.clear();
   // }
-  console.log("ERROR INTERCEPTORS",err);
+  // console.log("ERROR INTERCEPTORS",err);
   // Toast.show('Error');
 
   return Promise.reject(err);

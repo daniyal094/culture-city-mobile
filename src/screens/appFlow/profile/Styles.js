@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: height(5),
+    marginTop: height(4),
   },
   heading: {
     fontSize: totalSize(2),

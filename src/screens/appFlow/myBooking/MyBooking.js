@@ -14,7 +14,6 @@ const MyBooking = props => {
   const {isLoading, data} = useFetchUserBookingEventsService(
     propsData?.user?._id,
   );
-  console.log(data, isLoading);
   return (
     <>
       {isLoading ? (

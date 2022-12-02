@@ -25,7 +25,7 @@ export default function Navigation() {
   useEffect(() => {
     getAsyncStorage();
   }, []);
-
+console.log('index auth',isAuthenticated);
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
@@ -38,9 +38,7 @@ export default function Navigation() {
         <MainStack.Navigator
           screenOptions={{headerShown: false}}
           initialRouteName={isAuthenticated ? routes.app : routes.auth}>
-          {!isAuthenticated && (
             <MainStack.Screen name={routes.auth} component={AuthNavigation} />
-          )}
           <MainStack.Screen name={routes.app} component={AppNavigation} />
         </MainStack.Navigator>
       </NavigationContainer>
