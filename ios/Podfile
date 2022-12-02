@@ -5,9 +5,9 @@ platform :ios, '13.0'
 install! 'cocoapods', :deterministic_uuids => false
 
 target 'culturecity' do
-  config = use_native_modules!
   rn_maps_path = '../node_modules/react-native-maps'
   pod 'react-native-google-maps', :path => rn_maps_path
+  config = use_native_modules!
   # Flags change depending on the env values.
   flags = get_default_flags()
 
