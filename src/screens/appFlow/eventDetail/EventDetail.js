@@ -6,7 +6,7 @@ import {
   Pressable,
   ActivityIndicator,
 } from 'react-native';
-import React, {useCallback, useRef, useState, useEffect} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import styles from './Styles';
 import eventDetail from '../../../assets/images/eventDetail.png';
 import {colors} from '../../../utils/constants/colors';
@@ -19,31 +19,45 @@ import AntIcon from 'react-native-vector-icons/dist/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import useEventApi from '../../../utils/api/event.api';
 import {MEDIA_BASE_URL} from '../../../utils/constants/enums';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {routes} from '../../../utils/constants/routes';
+import {useUser} from '../../../utils/context/UserContenxt';
+import SimpleToast from 'react-native-simple-toast';
+import {sortArrObj} from '../../../utils/helper/functions';
+import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 
 const EventDetail = props => {
-  const [user, setuser] = useState(null);
+  const userData = useUser();
+  const user = userData?.user;
   const propsData = props.route.params;
   const navigation = useNavigation();
   const bottomSheetModalRef = useRef(null);
-  const {useFetchEventByIdService, useFetchFavStatusEventsService} =
-    useEventApi();
+  const [isFav, setisFav] = useState(fevStatusData?.isEventFavourite);
   const {
-    isLoading: isEventDeatilLoading,
-    data,
-    isSuccess,
-  } = useFetchEventByIdService(propsData.id);
-  const {
-    isLoading: isfavStatusLoading,
-    data: fevStatusData,
-    mutate,
-  } = useFetchFavStatusEventsService();
-  console.log('fevStatusData', fevStatusData);
-  const getAsyncStorage = async () => {
-    const res = await AsyncStorage.getItem('user');
-    setuser(JSON.parse(res)?.user);
-  };
+    useFetchEventByIdService,
+    useFetchFavStatusEventsService,
+    useHandleAddEventToFavouriteService,
+    useHandleRemoveEventFromFavouriteService,
+  } = useEventApi();
+  const {isLoading: isEventDeatilLoading, data} = useFetchEventByIdService(
+    propsData.id,
+  );
+  //to sort price ascending
+  sortArrObj(data?.tickets?.categories, 'price');
+  const {data: fevStatusData, refetch} = useFetchFavStatusEventsService(
+    user?._id,
+    propsData.id,
+  );
+
+  const {mutate: addEventToFavourite} = useHandleAddEventToFavouriteService(
+    propsData.id,
+    user?._id,
+  );
+
+  const {mutate: removeEventFromFav} = useHandleRemoveEventFromFavouriteService(
+    propsData.id,
+    user?._id,
+  );
+
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
@@ -53,16 +67,24 @@ const EventDetail = props => {
     ? `${MEDIA_BASE_URL}${data?.creator?.profilePicture?.url}`
     : data?.creator?.profilePicture?.url;
 
-  useEffect(() => {
-    getAsyncStorage();
-  }, []);
+  const favHandler = () => {
+    console.log("fevStatusData?.isEventFavourite",fevStatusData?.isEventFavourite);
+    if (fevStatusData?.isEventFavourite) {
+      // remove fav status
+      removeEventFromFav();
+      refetch();
+      setisFav(false)
+    } else {
+      // add fav status
+      addEventToFavourite(propsData.id, user?._id);
+      refetch();
+      setisFav(true)
+    }
+  };
 
   useEffect(() => {
-    if (user) {
-      console.log('mutaion data for fav ', user?._id, propsData.id);
-      // mutate(user, propsData.id);
-    }
-  }, [user]);
+    setisFav(fevStatusData?.isEventFavourite);
+  }, [fevStatusData]);
 
   return (
     <>
@@ -125,13 +147,24 @@ const EventDetail = props => {
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
-                    <View style={styles.locationIcon}>
+                    <Pressable style={{marginRight: 15}} onPress={favHandler}>
+                      <Icon
+                        name="favorite"
+                        size={totalSize(3)}
+                        color={isFav ? '#900' : colors.disableColor}
+                      />
+                    </Pressable>
+                    <Pressable
+                      style={styles.locationIcon}
+                      onPress={() =>
+                        navigation.navigate(routes.direction, {data: data})
+                      }>
                       <FontAwesome
                         name="location-arrow"
                         color="#fff"
                         size={totalSize(2)}
                       />
-                    </View>
+                    </Pressable>
                     {/* <Ionicons
           name="ios-chatbox-ellipses-outline"
           color={colors.primary}
@@ -193,9 +226,17 @@ const EventDetail = props => {
                 <View style={styles.btnContainer}>
                   <CustomButton
                     labeColor={colors.light}
-                    bgColor={colors.secondary}
+                    bgColor={
+                      userData.role === ''
+                        ? colors.disableColor
+                        : colors.secondary
+                    }
                     onPress={() => {
-                      handlePresentModalPress();
+                      if (userData.role) {
+                        handlePresentModalPress();
+                      } else {
+                        SimpleToast.show('Please login first');
+                      }
                     }}
                     label="Book this Event"
                     // loading={isLoginLoading}

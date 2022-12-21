@@ -15,7 +15,6 @@ import {countries} from '../../../utils/constants/countries';
 import TermsAndCondition from '../../../components/TermsAndCondition';
 
 const SignUpForm = ({isSignUpLoading, slectUserType, registerUser}) => {
-  console.log(slectUserType);
   const [isChecked, setisChecked] = useState(false);
   const [showPass, setshowPass] = useState(true);
   const [registerData, setregisterData] = useState({

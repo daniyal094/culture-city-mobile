@@ -1,5 +1,5 @@
 import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useId} from 'react';
 import festival from '../assets/images/festival.png';
 import {height, totalSize, width} from 'react-native-dimension';
 import {colors} from '../utils/constants/colors';
@@ -9,6 +9,7 @@ import {routes} from '../utils/constants/routes';
 
 const UpcomingCard = ({item}) => {
   const navigation = useNavigation();
+  const id = useId();
   const imgSrc =
     item?.media?.length > 0 && `${MEDIA_BASE_URL}${item?.media[0]}`;
   return (
@@ -18,7 +19,8 @@ const UpcomingCard = ({item}) => {
         height: height(25),
         alignItems: 'center',
         justifyContent: 'center',
-      }}>
+      }}
+      key={id}>
       <ImageBackground
         source={item?.media?.length > 0 ? {uri: imgSrc} : festival}
         resizeMode="cover"

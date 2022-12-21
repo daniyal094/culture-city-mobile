@@ -376,7 +376,6 @@ const useEventsService = () => {
 
     //Fetch Nearby Events
     const useFetchNearbyEventsService = ({latitude, longitude}) => {
-        console.log({latitude:latitude.value, longitude:longitude.value},"{latitude, longitude}")
         const fetchNearbyEventsRequest = (lat,long) => {
             const page = 1
             const limit = 999

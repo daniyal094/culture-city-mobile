@@ -1,17 +1,17 @@
-import {View, Text, Image, TouchableOpacity, Pressable} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import {View, Text, Image,  Pressable, ScrollView} from 'react-native';
+import React, { useState} from 'react';
 import styles from './Styles';
 import forgotImg from '.././../../assets/images/forgotImg.png';
 import CustomInput from '../../../components/CustomInput';
 import CustomButton from '../../../components/CustomButton';
 import {colors} from '../../../utils/constants/colors';
 import {useNavigation} from '@react-navigation/native';
-import {routes} from '../../../utils/constants/routes';
-import {getAsyncStorage} from '../../../utils/helper/functions';
 import useAuthApi from '../../../utils/api/auth.api';
+import { useUser } from '../../../utils/context/UserContenxt';
 const Verification = () => {
   const [code, setCode] = useState('');
-  const [user, setuser] = useState('');
+  const userData = useUser()
+  const user = userData?.user
   const {useHandleResendVerificationCodeApi, useHandleEmailVerificationApi} =
     useAuthApi();
   const {isLoading: isVerifyLoading, mutate: Verifymutate} =
@@ -20,9 +20,7 @@ const Verification = () => {
     useHandleResendVerificationCodeApi();
   const navigation = useNavigation();
 
-  useEffect(() => {
-    getAsyncStorage('user').then(res => setuser(res.user));
-  }, []);
+
 
   const resendHandler = () => {
     mutate(user?._id);
@@ -37,6 +35,8 @@ const Verification = () => {
   };
   return (
     <View style={styles.wraper}>
+      <ScrollView>
+
       <View style={styles.bodyContainer}>
         <Image source={forgotImg} resizeMode="contain" />
         <Text style={styles.heading}>Verifiy Account</Text>
@@ -61,6 +61,7 @@ const Verification = () => {
           label="verify"
         />
       </View>
+      </ScrollView>
     </View>
   );
 };

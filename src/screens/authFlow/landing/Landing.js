@@ -5,8 +5,11 @@ import landingBg from '../../../assets/images/landingBg.png';
 import landingLogo from '../../../assets/images/landingLogo.png';
 import CustomButton from '../../../components/CustomButton';
 import {colors} from '../../../utils/constants/colors';
+import { useNavigation } from '@react-navigation/native';
+import { routes } from '../../../utils/constants/routes';
 
 const Landing = () => {
+  const navigation = useNavigation()
   return (
     <View style={styles.wraper}>
       <ImageBackground
@@ -23,13 +26,13 @@ const Landing = () => {
           <CustomButton
             labeColor={colors.light}
             bgColor={colors.secondary}
-            onPress={() => alert('Pressed')}
+            onPress={() => navigation.navigate(routes.app)}
             label="Browse Events"
           />
           <CustomButton
             labeColor={colors.black}
             bgColor={colors.light}
-            onPress={() => alert('Pressed')}
+            onPress={() => navigation.navigate(routes.signin)}
             label="Login/Create account "
           />
         </View>

@@ -15,7 +15,6 @@ const MyEvents = props => {
   const {isLoading, data} = useFetchUserEventsService(
     propsData?.user?._id,
   );
-  console.log( "Testing id",propsData?.user?._id,data);
   return (
     <>
       {isLoading ? (

@@ -11,7 +11,6 @@ const InputDatePicker = ({
 }) => {
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
-  console.log(value);
   return (
     <>
       <Pressable style={styles.inputWrapper} onPress={() => setOpen(true)}>

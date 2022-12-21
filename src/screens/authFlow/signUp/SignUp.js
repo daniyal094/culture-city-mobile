@@ -23,7 +23,6 @@ const SignUp = () => {
           accessType: ACCESS_TYPE.INTERNAL,
           accessToken: '',
         };
-        console.log(apiData);
         mutate(apiData);
       } else {
         SimpleToast.show('Password Does not match');

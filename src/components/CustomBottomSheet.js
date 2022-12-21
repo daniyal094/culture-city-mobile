@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {View, Text, StyleSheet, Pressable, FlatList, Image} from 'react-native';
+import React, {useCallback, useMemo} from 'react';
+import {View, Text, StyleSheet, Pressable, FlatList} from 'react-native';
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
@@ -11,21 +11,16 @@ import AntIcon from 'react-native-vector-icons/dist/AntDesign';
 import FontIcon from 'react-native-vector-icons/dist/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import FeatherIcon from 'react-native-vector-icons/dist/Feather';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {routes} from '../utils/constants/routes';
-import {getAsyncStorage} from '../utils/helper/functions';
+import {useUser} from '../utils/context/UserContenxt';
+import SimpleToast from 'react-native-simple-toast';
 
 const CustomBottomSheet = ({bottomSheetModalRef}) => {
-  const [user, setuser] = useState('');
+  const user = useUser();
   const {useHandleLogOutApi} = useAuthApi();
   const navigation = useNavigation();
   const {isLoading: isLogoutLoading, mutate} = useHandleLogOutApi();
-
-  useEffect(() => {
-    getAsyncStorage('user').then(res => setuser(res.user));
-  }, []);
-
   // variables
   const snapPoints = useMemo(() => ['80%', '80%'], []);
 
@@ -37,12 +32,14 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
     console.log('handleSheetChanges', index);
   }, []);
   const logoutHandler = async () => {
-    const user = await AsyncStorage.getItem('user');
-    mutate(JSON.parse(user).user._id);
+    if (user.role) {
+      mutate(user?.user?._id);
+    } else {
+      navigation.navigate(routes.auth);
+    }
     closeHandler();
   };
 
-  console.log(user?.role);
   const listData = [
     {
       key: user?.role === 'Organizer' ? 'Add Event' : 'My Bookings',
@@ -54,6 +51,7 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
         />
       ),
       link: user?.role === 'Organizer' ? routes.addEvent : routes.myBooking,
+      isDisabled: !user?.role,
     },
     {
       key: user?.role === 'Organizer' ? 'My Events' : 'Bookmark',
@@ -61,6 +59,7 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
         <AntIcon name="heart" size={totalSize(2)} color={colors.secondary} />
       ),
       link: user?.role === 'Organizer' ? routes.myEvents : routes.myBookmark,
+      isDisabled: !user?.role,
     },
     {
       key: 'Messages',
@@ -68,6 +67,7 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
         <AntIcon name="message1" size={totalSize(2)} color={colors.green} />
       ),
       link: routes.changePass,
+      isDisabled: true,
     },
     {
       key: 'About Us',
@@ -79,6 +79,7 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
         />
       ),
       link: routes.aboutUs,
+      isDisabled: false,
     },
     {
       key: 'Change Password',
@@ -86,6 +87,7 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
         <FontIcon name="lock" size={totalSize(2)} color={colors.skyBlue} />
       ),
       link: routes.changePass,
+      isDisabled: !user?.role,
     },
     {
       key: 'Payment',
@@ -97,6 +99,7 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
         />
       ),
       link: routes.changePass,
+      isDisabled: !user?.role,
     },
     {
       key: 'Contact Us',
@@ -104,6 +107,7 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
         <AntIcon name="contacts" size={totalSize(2)} color={colors.green} />
       ),
       link: routes.contact,
+      isDisabled: !user?.role,
     },
     {
       key: 'Events',
@@ -111,6 +115,7 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
         <MaterialIcons name="event" size={totalSize(2)} color={colors.yellow} />
       ),
       link: routes.eventList,
+      isDisabled: false,
     },
   ];
   return (
@@ -143,15 +148,27 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
                   renderItem={({item}) => (
                     <Pressable
                       onPress={() => {
-                        closeHandler();
-                        navigation.navigate(item.link, {
-                          key: item.key,
-                          user: user,
-                        });
+                        if (!item?.isDisabled) {
+                          closeHandler();
+                          navigation.navigate(item.link, {
+                            key: item.key,
+                            user: user,
+                          });
+                        } else {
+                          SimpleToast.show('Please Login First');
+                        }
                       }}>
                       <View style={styles.item}>
                         {item?.icons}
-                        <Text style={styles.itemHeading}>{item.key}</Text>
+                        <Text
+                          style={{
+                            ...styles.itemHeading,
+                            color: item?.isDisabled
+                              ? colors.gray
+                              : colors.black,
+                          }}>
+                          {item.key}
+                        </Text>
                       </View>
                     </Pressable>
                   )}
@@ -170,7 +187,7 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
                       marginLeft: 5,
                       fontWeight: '700',
                     }}>
-                    Logout
+                    {user?.role === '' ? 'Login' : 'Logout'}
                   </Text>
                 </View>
               </Pressable>
@@ -220,7 +237,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemHeading: {
-    color: colors.black,
     fontWeight: '600',
     fontSize: totalSize(2),
     marginLeft: width(5),

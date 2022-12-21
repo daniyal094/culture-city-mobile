@@ -6,8 +6,11 @@ import {routes} from '../constants/routes';
 import {setAsyncStorage} from '../helper/functions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions} from '@react-navigation/native';
+import { useUserUpdate } from '../context/UserContenxt';
 export default useAuthApi = () => {
   const navigation = useNavigation();
+  const updateUser = useUserUpdate()
+
   const useHandleLoginApi = () => {
     const handleLoginService = data => {
       return axiosInstance.post(`/auth/login`, data);
@@ -16,6 +19,12 @@ export default useAuthApi = () => {
     const onSuccess = response => {
       Toast.show(response.data?.message);
       setAsyncStorage('user', response?.data?.data);
+      setAsyncStorage('tokens', response?.data?.data?.tokens);
+      updateUser({
+        user : response?.data?.data?.user,
+        token : response?.data?.data?.tokens,
+        role : response?.data?.data?.user?.role
+      })
       if (response?.data?.data?.user?.isApproved) {
         navigation.navigate(routes.app);
       } else {
@@ -40,7 +49,7 @@ export default useAuthApi = () => {
 
     const onSuccess = response => {
       Toast.show(response.data?.message);
-      navigation.navigate(routes.app);
+      navigation.navigate(routes.signin);
     };
     const onError = error => {
       let err = error.response.data?.message;

@@ -30,7 +30,7 @@ const Event = () => {
         </View>
       ) : (
 
-        <ScrollView style={{marginBottom: height(5)}}>
+        <ScrollView style={{marginBottom: height(9)}}>
           {eventList?.map((item, idx) => (
             <EvenListContainer
               heading={item?.name}

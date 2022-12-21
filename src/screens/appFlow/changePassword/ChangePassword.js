@@ -1,5 +1,5 @@
 import {View, Text, Image, TouchableOpacity} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useState} from 'react';
 import styles from './Styles';
 import changePass from '.././../../assets/images/changePass.png';
 import CustomInput from '../../../components/CustomInput';
@@ -9,9 +9,9 @@ import {height} from 'react-native-dimension';
 import {useNavigation} from '@react-navigation/native';
 import useAuthApi from '../../../utils/api/auth.api';
 import FeatherIcons from 'react-native-vector-icons/Feather';
-import {getAsyncStorage} from '../../../utils/helper/functions';
+import {useUser} from '../../../utils/context/UserContenxt';
 const ChangePassword = () => {
-  const [user, setuser] = useState('');
+  const user = useUser();
   const [inputData, setinputData] = useState({
     oldPassword: '',
     newPassword: '',
@@ -21,13 +21,9 @@ const ChangePassword = () => {
   const {useHandleChangePasswordApi} = useAuthApi();
   const {isLoading: isChangePassLoading, mutate} = useHandleChangePasswordApi();
 
-  useEffect(() => {
-    getAsyncStorage('user').then(res => setuser(res.user));
-  }, []);
-
   const changePasswordHandler = () => {
     const apiData = {
-      id: user._id,
+      id: user?.user?._id,
       ...inputData,
     };
     mutate(apiData);

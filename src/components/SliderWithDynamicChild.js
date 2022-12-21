@@ -1,5 +1,5 @@
 import {Dimensions, FlatList, View, Animated} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useId, useState} from 'react';
 import {StyleSheet} from 'react-native';
 const {width} = Dimensions.get('window');
 
@@ -29,7 +29,7 @@ function SliderWithDynamicChild  ({
   const [dataList, setdataList] = useState(data);
   const scrollX = new Animated.Value(0);
   let position = Animated.divide(scrollX, width);
-
+  const id  = useId()
   useEffect(() => {
     setdataList(data);
     infiniteLoop(data);
@@ -42,7 +42,7 @@ function SliderWithDynamicChild  ({
             numColumns={1}
             data={dataList}
             ref={flatList => (this.flatList = flatList)}
-            renderItem={({item,idx}) => <RenderItem item={item} key={idx + 1}/>}
+            renderItem={({item,idx}) => <RenderItem item={item} key={id}/>}
             horizontal={true}
             keyExtractor={item => item.id}
             showsHorizontalScrollIndicator={false}

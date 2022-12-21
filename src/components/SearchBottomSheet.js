@@ -62,12 +62,10 @@ const SearchBottomSheet = ({searchSheetModalRef}) => {
   }, []);
 
   const searchHandler = async () => {
-    if (searchData.dateFilter !== '' && searchData.dateFilter !== '' ) {
-      
+    if (searchData.dateFilter !== '' && searchData.dateFilter !== '') {
       mutate(searchData);
-    }
-    else{
-      SimpleToast.show('Fill Search field and date type')
+    } else {
+      SimpleToast.show('Fill Search field and date type');
     }
   };
 
@@ -160,6 +158,7 @@ const SearchBottomSheet = ({searchSheetModalRef}) => {
                 placeholder="Date"
                 zIndex={1000}
                 zIndexInverse={3000}
+                defaultVlue={{label: 'Any Date', value: 1}}
               />
               <CustomButton
                 labeColor={colors.light}

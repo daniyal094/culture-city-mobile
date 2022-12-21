@@ -24,5 +24,6 @@ export const routes = {
   myBookmark:'myBookmark',
   direction : 'direction',
   addEvent : 'addEvent',
-  myEvents : 'myEvents'
+  myEvents : 'myEvents',
+  landing : 'landing'
 };

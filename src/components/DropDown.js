@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import { useState} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {colors} from '../utils/constants/colors';
 
@@ -11,10 +11,10 @@ const DropDown = ({
   placeholder = 'Select an item',
   zIndex,
   zIndexInverse,
-  defaultVlue
+  
 }) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(defaultVlue);
+  const [value, setValue] = useState("");
   const [items, setItems] = useState(list);
 
   const clickHandler = item => {
@@ -22,12 +22,8 @@ const DropDown = ({
     setState({...extraData, [stateKey]: item()});
   };
 
-  useEffect(() => {
-    setValue(defaultVlue);
-  }, [defaultVlue]);
 
   return (
-    
     <DropDownPicker
       open={open}
       value={value}
@@ -53,7 +49,6 @@ const DropDown = ({
       placeholder={placeholder}
       zIndex={zIndex}
       zIndexInverse={zIndexInverse}
-      
     />
   );
 };

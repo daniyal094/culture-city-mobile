@@ -1,5 +1,5 @@
 import {View, Text, Pressable, ImageBackground} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useState} from 'react';
 import styles from './Styles';
 import {totalSize} from 'react-native-dimension';
 import AntIcon from 'react-native-vector-icons/dist/AntDesign';
@@ -10,12 +10,13 @@ import MaterialCommunityIcons from 'react-native-vector-icons/dist/MaterialCommu
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import CustomInput from '../../../components/CustomInput';
 import CustomButton from '../../../components/CustomButton';
-import {getAsyncStorage} from '../../../utils/helper/functions';
 import useContactApi from '../../../utils/api/contact.api';
 import DropDown from '../../../components/DropDown';
+import { useUser } from '../../../utils/context/UserContenxt';
 const ContactUs = () => {
+  const userData = useUser()
+  const user = userData?.user
   const navigation = useNavigation();
-  const [user, setuser] = useState('');
   const [contactData, setcontactData] = useState({
     phone: '',
     reason: '',
@@ -25,11 +26,6 @@ const ContactUs = () => {
   const {useHandleContactUsService} = useContactApi();
   const {isLoading: isContactLoading, mutate} = useHandleContactUsService();
 
-  useEffect(() => {
-    //get user from async storage
-    getAsyncStorage('user').then(res => setuser(res.user));
-  }, []);
-
   const contactHandler = () => {
     const apiData = {
       firstName: user.firstName,
@@ -37,7 +33,6 @@ const ContactUs = () => {
       email: user.email,
       ...contactData,
     };
-    console.log(apiData);
     mutate(apiData);
   };
   return (

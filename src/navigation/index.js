@@ -6,13 +6,15 @@ import AppNavigation from './appNavigation/AppNavigation';
 import Splash from '../screens/authFlow/splash/Splash';
 import {routes} from '../utils/constants/routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useUserUpdate} from '../utils/context/UserContenxt';
 
 const MainStack = createNativeStackNavigator();
 
 export default function Navigation() {
   const [loading, setLoading] = useState(true);
+  const [user, setuser] = useState({});
   const [isAuthenticated, setisAuthenticated] = useState(false);
-
+  const updateUser = useUserUpdate();
   const getAsyncStorage = async () => {
     const user = await AsyncStorage.getItem('user');
     setisAuthenticated(
@@ -20,17 +22,21 @@ export default function Navigation() {
         ? true
         : false,
     );
+    setuser(JSON.parse(user));
+    updateUser({
+      user: JSON.parse(user)?.user || '',
+      role: JSON.parse(user)?.user?.role || '',
+      token: JSON.parse(user)?.tokens || '',
+    });
   };
 
   useEffect(() => {
-    getAsyncStorage();
-  }, []);
-console.log('index auth',isAuthenticated);
-  useEffect(() => {
     setTimeout(() => {
-      setLoading(false);
+      getAsyncStorage().then(() => {
+        setLoading(false);
+      });
     }, 2500);
-  });
+  }, []);
   if (loading) return <Splash />;
   else
     return (
@@ -38,8 +44,16 @@ console.log('index auth',isAuthenticated);
         <MainStack.Navigator
           screenOptions={{headerShown: false}}
           initialRouteName={isAuthenticated ? routes.app : routes.auth}>
-            <MainStack.Screen name={routes.auth} component={AuthNavigation} />
-          <MainStack.Screen name={routes.app} component={AppNavigation} />
+          <MainStack.Screen
+            name={routes.auth}
+            component={AuthNavigation}
+            initialParams={{user: user}}
+          />
+          <MainStack.Screen
+            name={routes.app}
+            component={AppNavigation}
+            initialParams={{user: user}}
+          />
         </MainStack.Navigator>
       </NavigationContainer>
     );

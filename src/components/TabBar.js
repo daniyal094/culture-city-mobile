@@ -9,12 +9,14 @@ import CustomBottomSheet from './CustomBottomSheet';
 import {useNavigation} from '@react-navigation/native';
 import {routes} from '../utils/constants/routes';
 import SearchBottomSheet from './SearchBottomSheet';
+import {useUser} from '../utils/context/UserContenxt';
+import SimpleToast from 'react-native-simple-toast';
 
 const TabBar = ({selectedTab}) => {
   const navigation = useNavigation();
   const bottomSheetModalRef = useRef(null);
   const searchSheetModalRef = useRef(null);
-
+  const user = useUser();
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
@@ -117,7 +119,15 @@ const TabBar = ({selectedTab}) => {
             </Text>
           </View>
         </Pressable>
-        <Pressable onPress={() => navigation.navigate(routes.profile)}>
+        <Pressable
+          onPress={() => {
+            if (user.role) {
+              navigation.navigate(routes.profile);
+            }
+            else{
+              SimpleToast.show("Please Login First")
+            }
+          }}>
           <View
             style={{
               ...styles.rowContainer,
@@ -143,7 +153,7 @@ const TabBar = ({selectedTab}) => {
           </View>
         </Pressable>
       </View>
-      <SearchBottomSheet searchSheetModalRef={searchSheetModalRef}/>
+      <SearchBottomSheet searchSheetModalRef={searchSheetModalRef} />
       <CustomBottomSheet bottomSheetModalRef={bottomSheetModalRef} />
     </>
   );
@@ -162,7 +172,7 @@ const styles = StyleSheet.create({
     elevation: 4,
     position: 'absolute',
     bottom: 0,
-    zIndex:999
+    zIndex: 999,
   },
   rowContainer: {
     justifyContent: 'center',

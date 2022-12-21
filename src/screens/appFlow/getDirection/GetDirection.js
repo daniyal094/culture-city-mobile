@@ -10,16 +10,18 @@ import styles from './Styles';
 import BookEventModal from '../../../components/BookEventModal';
 import CustomButton from '../../../components/CustomButton';
 import {MEDIA_BASE_URL} from '../../../utils/constants/enums';
+import {useUser} from '../../../utils/context/UserContenxt';
+import SimpleToast from 'react-native-simple-toast';
 const GetDirection = props => {
   const navigation = useNavigation();
   const propsData = props.route.params;
   const data = propsData?.data;
   const bottomSheetModalRef = useRef(null);
+  const userData = useUser();
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
-  console.log(data);
   return (
     <>
       <View style={styles.header}>
@@ -96,9 +98,15 @@ const GetDirection = props => {
       <View style={styles.btnContainer}>
         <CustomButton
           labeColor={colors.light}
-          bgColor={colors.secondary}
+          bgColor={
+            userData.role === '' ? colors.disableColor : colors.secondary
+          }
           onPress={() => {
-            handlePresentModalPress();
+            if (userData?.role) {
+              handlePresentModalPress();
+            } else {
+              SimpleToast.show('Please Login First');
+            }
           }}
           label="Book this Event"
           // loading={isLoginLoading}

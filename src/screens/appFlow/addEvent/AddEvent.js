@@ -32,7 +32,6 @@ const AddEvent = () => {
   const {useFetchAllTimeZoneService} = useCultureApi();
   const {data: timeZoneData} = useFetchAllTimeZoneService();
 
-  console.log(timeZoneData);
 
   return (
     <View style={styles.wraper}>

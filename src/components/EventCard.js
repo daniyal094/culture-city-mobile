@@ -12,7 +12,6 @@ const EventCard = ({data}) => {
   const navigation = useNavigation();
   const date = new Date(data?.startDateTime);
   const imgSrc = data?.media?.length > 0  && `${MEDIA_BASE_URL}${data?.media[0]}`;
-  console.log('data', data);
   return (
     <View style={styles.cardContainer}>
       <View>
@@ -26,9 +25,9 @@ const EventCard = ({data}) => {
         </View>
       </View>
       <View style={styles.detailSection}>
-        <Text style={styles.heading}>{data?.title}</Text>
-        <Text style={styles.subHeading}>{data?.eventType}</Text>
-        <Text style={styles.detail}>{data?.about}</Text>
+        <Text style={styles.heading} numberOfLines={1}>{data?.title}</Text>
+        <Text style={styles.subHeading} numberOfLines={1}>{data?.eventType}</Text>
+        <Text style={styles.detail} numberOfLines={2}>{data?.about}</Text>
         <Pressable
           onPress={() =>
             navigation.navigate(routes.eventDetail, {id: data?._id})
@@ -58,6 +57,7 @@ const styles = StyleSheet.create({
   },
   detailSection: {
     marginLeft: width(4),
+    width:width(50)
   },
   heading: {
     fontSize: 18,

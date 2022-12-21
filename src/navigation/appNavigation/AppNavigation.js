@@ -18,7 +18,8 @@ import MyEvents from '../../screens/appFlow/myEvents/MyEvents';
 
 const AppStack = createNativeStackNavigator();
 
-const AppNavigation = () => {
+const AppNavigation = props => {
+  const propsData = props.route.params;
   return (
     <AppStack.Navigator
       initialRouteName={routes.home}
@@ -40,7 +41,6 @@ const AppNavigation = () => {
       <AppStack.Screen name={routes.direction} component={GetDirection} />
       <AppStack.Screen name={routes.addEvent} component={AddEvent} />
       <AppStack.Screen name={routes.myEvents} component={MyEvents} />
-    
     </AppStack.Navigator>
   );
 };

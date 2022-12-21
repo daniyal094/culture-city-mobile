@@ -1,7 +1,7 @@
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import Evenet from '../assets/images/Evenet.png';
-import {height, width} from 'react-native-dimension';
+import {height, totalSize, width} from 'react-native-dimension';
 import {colors} from '../utils/constants/colors';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import CalanderBox from './CalanderBox';
@@ -31,7 +31,7 @@ const FestivalCardBg = ({data}) => {
         <CalanderBox date={date.getDate()} month={date.getMonth()} />
         <View style={styles.detailContainer}>
           <Text style={styles.cardHeading}>{data?.title}</Text>
-          <Text style={styles.cardDetailText}>{data?.about}</Text>
+          <Text style={styles.cardDetailText}>Time Zone:{data?.timezone}</Text>
           <View style={{justifyContent: 'flex-end', flexDirection: 'row'}}>
             {/* <View style={styles.iconContainer}>
               <Icon name="favorite" size={14} color="#900" />
@@ -80,7 +80,8 @@ const styles = StyleSheet.create({
   cardDetailText: {
     color: colors.white,
     fontWeight: '400',
-    fontSize: 10,
+    fontSize: totalSize(1.3),
+    marginTop:5,
   },
   iconContainer: {
     backgroundColor: colors.white,

@@ -74,7 +74,7 @@ export default useEventApi = () => {
         return response?.data?.data;
       },
     });
-  }; 
+  };
 
   //Fetch Event By Id
   const useFetchEventByIdService = eventId => {
@@ -173,51 +173,45 @@ export default useEventApi = () => {
   };
 
   // Fetch favorite status of Events
-  const useFetchFavStatusEventsService = () => {
-    const fetchFavStatusEventsRequest = (seekerId, eventId) => {
+  const useFetchFavStatusEventsService = (seekerId, eventId) => {
+    const fetchFavStatusEventsRequest = () => {
       return axiosInstance.get(
         `/event/favourite-followed?seekerId=${seekerId}&eventId=${eventId}`,
       );
     };
-    const onError = error => {
-      if (error?.request.status === 401) {
-        AsyncStorage.clear();
-        navigation.navigate(routes.auth);
-        Toast.show('Session Expired');
-      } else {
-        console.log(error);
-        Toast.show(error.data?.message);
-      }
-    };
-    return useMutation(
-      (seekerId, eventId) => fetchFavStatusEventsRequest(seekerId, eventId),
-      {
-        onError,
+
+    return useQuery(['fav-event'], fetchFavStatusEventsRequest, {
+      retry: 1,
+      select: response => {
+        return response?.data?.data;
       },
-    );
+    });
   };
 
   //Add Event To Favourite
-  const useHandleAddEventToFavouriteService = () => {
-    const HandleAddEventToFavouriteRequest = (eventId, userId) => {
-      return axios.post(`/favourite?userId=${userId}&eventId=${eventId}`);
+  const useHandleAddEventToFavouriteService = (eventId, userId) => {
+    const HandleAddEventToFavouriteRequest = () => {
+      console.log(eventId, userId);
+      return axiosInstance.post(
+        `/favourite?userId=${userId}&eventId=${eventId}`,
+      );
+    };
+    const onSuccess = response => {
+      Toast.show('Event Added In Favourite List');
     };
 
     const onError = error => {
-      useToaster('danger', 'Error', error.response.data.message);
+      Toast.show(error.response.data.message);
     };
-    return useMutation(
-      (eventId, userId) => HandleAddEventToFavouriteRequest(eventId, userId),
-      {
-        retry: 0,
-        onError,
-      },
-    );
+    return useMutation(() => HandleAddEventToFavouriteRequest(), {
+      onSuccess,
+      onError,
+    });
   };
 
   //Remove Event To Favourite
-  const useHandleRemoveEventFromFavouriteService = () => {
-    const handleRemoveEventFromFavouriteRequest = (eventId, userId) => {
+  const useHandleRemoveEventFromFavouriteService = (eventId, userId) => {
+    const handleRemoveEventFromFavouriteRequest = () => {
       return axiosInstance.delete(
         `/favourite?userId=${userId}&eventId=${eventId}`,
       );
@@ -227,15 +221,12 @@ export default useEventApi = () => {
       console.log(error);
       Toast.show(error.response.data.message);
     };
-    return useMutation(
-      (eventId, userId) =>
-        handleRemoveEventFromFavouriteRequest(eventId, userId),
-      {
-        retry: 0,
-        onError,
-        // onSuccess: data => data,
+    return useMutation(() => handleRemoveEventFromFavouriteRequest(), {
+      onError,
+      onSuccess: data => {
+        Toast.show('Event Removed From Favourite List');
       },
-    );
+    });
   };
 
   return {

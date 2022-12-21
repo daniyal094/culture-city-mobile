@@ -9,15 +9,13 @@ import {colors} from '../../../utils/constants/colors';
 import {useNavigation} from '@react-navigation/native';
 import ProfileView from './ProfileView';
 import ProfileEdit from './ProfileEdit';
-import {getAsyncStorage} from '../../../utils/helper/functions';
 import { MEDIA_BASE_URL } from '../../../utils/constants/enums';
-import useEventApi from '../../../utils/api/auth.api'
+import { useUser } from '../../../utils/context/UserContenxt';
 const Profile = () => {
-  const [user, setuser] = useState('');
+  const user = useUser()
   const [isEdit, setisEdit] = useState(false);
   const navigation = useNavigation();
 
-  console.log(user);
   const backHandler = () => {
     if (!isEdit) {
       navigation.goBack();
@@ -25,13 +23,10 @@ const Profile = () => {
       setisEdit(!isEdit);
     }
   };
-  useEffect(() => {
-    //get user from async storage
-    getAsyncStorage('user').then(res => setuser(res.user));
-  }, []);
-  const imgSrc = !user?.profilePicture?.isCompleteUrl
-    ? `${MEDIA_BASE_URL}${user?.profilePicture?.url}`
-    : user?.profilePicture?.url;
+
+  const imgSrc = !user?.user?.profilePicture?.isCompleteUrl
+    ? `${MEDIA_BASE_URL}${user?.user?.profilePicture?.url}`
+    : user?.user?.profilePicture?.url;
 
   return (
     <>
@@ -69,15 +64,15 @@ const Profile = () => {
             />
             {!isEdit && (
               <Text style={styles.heading}>
-                {user.firstName + ' ' + user.lastName}
+                {user?.user?.firstName + ' ' + user?.user?.lastName}
               </Text>
             )}
           </View>
           {!isEdit ? (
-            <ProfileView userData={user} />
+            <ProfileView userData={user?.user} />
           ) : (
             <ProfileEdit
-              userData={user}
+              userData={user?.user}
               setisEdit={value => setisEdit(value)}
             />
           )}

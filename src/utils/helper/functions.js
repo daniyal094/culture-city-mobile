@@ -27,15 +27,24 @@ export const getAsyncStorage = async key => {
 // get DropDownObjArray
 
 export const getDropDownObj = (data, labelName = false) => {
-  console.log(labelName);
   if (data?.length > 0) {
     return data?.map(i => {
       return {label: labelName ? i[labelName] : i, value: i};
     });
   } else {
-    return [{
-      label: '',
-      value: '',
-    }];
+    return [
+      {
+        label: '',
+        value: '',
+      },
+    ];
   }
+};
+
+// sort array of objects
+
+export const sortArrObj = (arr, prop) => {
+  arr?.sort((a, b) => {
+    return a[prop] - b[prop];
+  });
 };

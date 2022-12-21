@@ -1,5 +1,5 @@
 import {View, Text, FlatList} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import styles from './Styles';
 import AntIcon from 'react-native-vector-icons/dist/AntDesign';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
@@ -15,7 +15,6 @@ const MyBookmark = props => {
   const {isLoading, data} = useFetchUserBookmarkEventsService(
     propsData?.user?._id,
   );
-  console.log(data);
   return (
     <View style={styles.wraper}>
       <View style={styles.header}>

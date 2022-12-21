@@ -59,7 +59,7 @@ const BookEventModal = ({bottomSheetModalRef, data}) => {
                   size={totalSize(2)}
                 />
                 <Text style={{color: colors.disableColor}}>
-                  {data?.timezone} (Timezone) 
+                  {data?.timezone} (Timezone)
                 </Text>
               </View>
               <View style={{...styles.flexRow, marginTop: height(1)}}>
@@ -123,7 +123,8 @@ const BookEventModal = ({bottomSheetModalRef, data}) => {
             {!data?.tickets?.isFree && (
               <DropDown
                 list={data?.tickets?.categories?.map(item => {
-                  return {label: item?.name, value: item};
+                  const ticket = `${item?.name}  $${item?.price}`;
+                  return {label: ticket, value: item};
                 })}
                 setState={setticketType}
                 stateKey="ticketType"

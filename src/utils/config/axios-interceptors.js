@@ -1,6 +1,7 @@
 import axios from './axios-instance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
+import {setAsyncStorage} from '../helper/functions';
 // import { useNavigation } from '@react-navigation/native';
 // import { routes } from "../constants/routes";
 
@@ -9,11 +10,10 @@ import Toast from 'react-native-simple-toast';
 const requestHandler = async request => {
   // Token will be dynamic, so we can use any app-specific way to always
   // fetch the new token before making the call
-  const user = await AsyncStorage.getItem('user');
-  const token = JSON.parse(user)?.tokens?.access_token;
-    request.headers['Authorization'] = `Bearer ${token}`;
-    return request;
-
+  const tokenList = await AsyncStorage.getItem('tokens');
+  const token = JSON.parse(tokenList)?.access_token;
+  request.headers['Authorization'] = `Bearer ${token}`;
+  return request;
 };
 
 const responseHandler = async response => {
@@ -23,11 +23,24 @@ const responseHandler = async response => {
   return response;
 };
 
-const errorHandler =  err => {
-  // if (err.response.status === 401) {
-  //   Toast.show('Session Expired 401');
-    // AsyncStorage.clear();
-  // } 
+const errorHandler = async err => {
+  const originalConfig = err.config;
+  if (err.response.status === 401) {
+    // const user = await AsyncStorage.getItem('user');
+    // const userId = JSON.parse(user)?.user?._id;
+    // originalConfig._retry = true;
+    // try {
+    //   const rs = await axios.get(`/auth/tokens?userId=${userId}`);
+    //   setAsyncStorage('tokens', rs.data.data.tokens);
+    //   return axios(originalConfig);
+    // } catch (error) {
+    //   return Promise.reject(error);
+    // }
+  }
+  else{
+    let error = err?.response?.data?.message;
+    Toast.show(Array.isArray(error) ? error[0] : error);
+  }
   // else if (err.response.status === 403) {
   //   Toast.show('Session Expired 403');
   //   // AsyncStorage.clear();

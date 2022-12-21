@@ -7,13 +7,12 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useId, useState} from 'react';
 import styles from './Styles';
 import banner1 from '../../../assets/images/slide1.jpg';
 import banner2 from '../../../assets/images/slide2.jpg';
 import banner3 from '../../../assets/images/slide3.jpg';
 import banner4 from '../../../assets/images/slide4.jpg';
-
 import {height, totalSize, width} from 'react-native-dimension';
 import FestivalCardBg from '../../../components/FestivalCardBg';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
@@ -25,7 +24,9 @@ import {colors} from '../../../utils/constants/colors';
 import {useNavigation} from '@react-navigation/native';
 import {routes} from '../../../utils/constants/routes';
 import UpcomingCard from '../../../components/UpcomingCard';
+
 const Dashboard = () => {
+  const Pid = useId();
   const {useFetchHomeEventsService, useFetchNearByEventsService} =
     useEventApi();
   const {isLoading: isLoadingHomeEvent, data: homeEvents} =
@@ -75,9 +76,9 @@ const Dashboard = () => {
     setselectedtab(tabName);
     if (tabName === 'Featured') {
       settabData(homeEvents?.featuredEvents);
-      // settabData(nearByEvents);
     }
     if (tabName === 'Populer') {
+      
       settabData(homeEvents?.popularEvents);
     }
     // if (tabName === 'Upcoming') {
@@ -85,11 +86,14 @@ const Dashboard = () => {
     // }
   };
   const RenderItem = ({item}) => {
+    const id = useId();
     return (
       <ImageBackground
         source={item?.img}
         style={{width: width(100), height: height(30)}}
-        resizeMode="cover">
+        resizeMode="cover"
+        key={id}
+        >
         <View
           style={{
             position: 'absolute',
@@ -102,7 +106,7 @@ const Dashboard = () => {
             Ethnic Events is your one-stop shop for all things cultural in
             Chicago.
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate(routes.eventList)}>
             <Text style={styles.bannerReadLink}>Read more</Text>
           </TouchableOpacity>
         </View>
@@ -156,7 +160,7 @@ const Dashboard = () => {
                   numColumns={1}
                   data={tabData || []}
                   renderItem={({item, idx}) => (
-                    <FestivalCardBg data={item} key={idx + 1} />
+                    <FestivalCardBg data={item} key={`${Pid}-festival`} />
                   )}
                   horizontal={true}
                   keyExtractor={item => item.id}
@@ -193,8 +197,8 @@ const Dashboard = () => {
                 <SliderWithDynamicChild
                   data={homeEvents?.upcomingEvents || []}
                   RenderItem={UpcomingCard}
-                  containerHeight={height(25)}
-                  containerWidth={width(90)}
+                  containerHeight={height(27)}
+                  containerWidth={width(100)}
                 />
               </View>
               <Text style={styles.heading}>Events near you </Text>
@@ -204,7 +208,7 @@ const Dashboard = () => {
                   numColumns={1}
                   data={nearByEvents || {}}
                   renderItem={({item, idx}) => (
-                    <NearFestivalCard item={item} key={idx + 1} />
+                    <NearFestivalCard item={item} key={`${Pid}-nearEvent`} />
                   )}
                   horizontal={true}
                   keyExtractor={item => item.id}

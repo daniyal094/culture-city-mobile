@@ -19,6 +19,7 @@ import useAuthApi from '../../../utils/api/auth.api';
 import FeatherIcons from 'react-native-vector-icons/Feather';
 import {IsEmail} from '../../../utils/helper/functions';
 import Toast from 'react-native-simple-toast';
+import { useUserUpdate } from '../../../utils/context/UserContenxt';
 const SignIn = () => {
   const navigation = useNavigation();
   const [loginData, setloginData] = useState({
