@@ -20,7 +20,7 @@ const SearchBottomSheet = ({searchSheetModalRef}) => {
     isFree: false,
     culture: '',
     eventType: '',
-    dateFilter: '',
+    dateFilter: 1,
   });
   const [isChecked, setisChecked] = useState('free');
   const navigation = useNavigation();
@@ -62,11 +62,13 @@ const SearchBottomSheet = ({searchSheetModalRef}) => {
   }, []);
 
   const searchHandler = async () => {
-    if (searchData.dateFilter !== '' && searchData.dateFilter !== '') {
+    // if (searchData.dateFilter !== '' && searchData.dateFilter !== '') {
       mutate(searchData);
-    } else {
-      SimpleToast.show('Fill Search field and date type');
-    }
+      closeHandler()
+    // } 
+    // else {
+    //   SimpleToast.show('Fill Search field and date type');
+    // }
   };
 
   return (
@@ -177,7 +179,7 @@ const SearchBottomSheet = ({searchSheetModalRef}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+ 
     justifyContent: 'center',
   },
   rowCenter: {

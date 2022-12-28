@@ -15,15 +15,22 @@ import {useNavigation} from '@react-navigation/native';
 import {routes} from '../utils/constants/routes';
 import {useUser} from '../utils/context/UserContenxt';
 import SimpleToast from 'react-native-simple-toast';
+import Entypo from 'react-native-vector-icons/dist/Entypo';
+import useUserApi from '../utils/api/user.api';
 
 const CustomBottomSheet = ({bottomSheetModalRef}) => {
   const user = useUser();
   const {useHandleLogOutApi} = useAuthApi();
   const navigation = useNavigation();
-  const {isLoading: isLogoutLoading, mutate} = useHandleLogOutApi();
+  const {mutate} = useHandleLogOutApi();
+  const {useHandleSavePayoutService, useHandleVisitStripeDashboardService} =
+    useUserApi();
+  const {mutate: saveCardOrg} = useHandleSavePayoutService(user.user._id);
+  const {mutate: stripeDashboard} = useHandleVisitStripeDashboardService(
+    user.user._id,
+  );
   // variables
   const snapPoints = useMemo(() => ['80%', '80%'], []);
-
   // callbacks
   const closeHandler = useCallback(() => {
     bottomSheetModalRef.current?.close();
@@ -35,6 +42,10 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
     if (user.role) {
       mutate(user?.user?._id);
     } else {
+      // navigation.reset({
+      //   index: 0,
+      //   routes: [{name : routes.auth}],
+      // });
       navigation.navigate(routes.auth);
     }
     closeHandler();
@@ -62,12 +73,19 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
       isDisabled: !user?.role,
     },
     {
-      key: 'Messages',
-      icons: (
-        <AntIcon name="message1" size={totalSize(2)} color={colors.green} />
-      ),
-      link: routes.changePass,
-      isDisabled: true,
+      key: user?.role === 'Organizer' ? 'Ticket Orders' : 'Cart',
+      icons:
+        user?.role === 'Organizer' ? (
+          <Entypo name="ticket" size={totalSize(2.2)} color={colors.green} />
+        ) : (
+          <AntIcon
+            name="shoppingcart"
+            size={totalSize(2)}
+            color={colors.green}
+          />
+        ),
+      link: user?.role === 'Organizer' ? routes.tickets : routes.cart,
+      isDisabled: !user?.role,
     },
     {
       key: 'About Us',
@@ -90,7 +108,12 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
       isDisabled: !user?.role,
     },
     {
-      key: 'Payment',
+      key:
+        user?.role === 'Organizer'
+          ? user?.user?.stripeConnectCompleted
+            ? 'Stripe Dashboard'
+            : 'Add Payout'
+          : 'Payment',
       icons: (
         <MaterialIcons
           name="payments"
@@ -98,8 +121,14 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
           color={colors.lightPink}
         />
       ),
-      link: routes.changePass,
+      link:
+        user?.role === 'Organizer'
+          ? user?.user?.stripeConnectCompleted
+            ? () => stripeDashboard()
+            : () => saveCardOrg()
+          : routes.payment,
       isDisabled: !user?.role,
+      isNotLink: user?.role === 'Organizer' ? true : false,
     },
     {
       key: 'Contact Us',
@@ -149,11 +178,15 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
                     <Pressable
                       onPress={() => {
                         if (!item?.isDisabled) {
-                          closeHandler();
-                          navigation.navigate(item.link, {
-                            key: item.key,
-                            user: user,
-                          });
+                          if (!item.isNotLink) {
+                            closeHandler();
+                            navigation.navigate(item.link, {
+                              key: item.key,
+                              user: user,
+                            });
+                          } else {
+                            item.link();
+                          }
                         } else {
                           SimpleToast.show('Please Login First');
                         }
@@ -201,7 +234,6 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
   },
   rowCenter: {

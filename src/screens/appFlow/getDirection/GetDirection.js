@@ -1,7 +1,7 @@
 import {View, Text, FlatList, Pressable, Image} from 'react-native';
 import React, {useCallback, useRef} from 'react';
 import {height, totalSize, width} from 'react-native-dimension';
-import MapView from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import {PROVIDER_GOOGLE} from 'react-native-maps';
 import AntIcon from 'react-native-vector-icons/dist/AntDesign';
 import {useNavigation} from '@react-navigation/native';
@@ -12,6 +12,7 @@ import CustomButton from '../../../components/CustomButton';
 import {MEDIA_BASE_URL} from '../../../utils/constants/enums';
 import {useUser} from '../../../utils/context/UserContenxt';
 import SimpleToast from 'react-native-simple-toast';
+import logo from '../../../assets/images/logo.png';
 const GetDirection = props => {
   const navigation = useNavigation();
   const propsData = props.route.params;
@@ -43,8 +44,20 @@ const GetDirection = props => {
             longitude: data?.location?.coordinates[0] || 67.0011,
             latitudeDelta: 0.015,
             longitudeDelta: 0.0121,
-          }}></MapView>
-      </View>
+          }}>
+          <Marker
+            coordinate={{
+              latitude: data?.location?.coordinates[1],
+              longitude: data?.location?.coordinates[0],
+            }}>
+            <Image
+              source={logo}
+              style={{width: width(10), height: height(5),borderRadius:50}}
+              resizeMode="contain"
+            />
+          </Marker>
+        </MapView>
+      </View> 
       <View style={{marginLeft: width(4)}}>
         <Text style={styles.EventHeading}>{data?.title}</Text>
         <View style={{...styles.flexRow, marginTop: height(1)}}>

@@ -2,6 +2,8 @@ import axios from './axios-instance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
 import {setAsyncStorage} from '../helper/functions';
+import * as RootNavigation from '../../navigation/RootNavigation.js';
+import {routes} from '../constants/routes';
 // import { useNavigation } from '@react-navigation/native';
 // import { routes } from "../constants/routes";
 
@@ -24,20 +26,13 @@ const responseHandler = async response => {
 };
 
 const errorHandler = async err => {
-  const originalConfig = err.config;
+  // const originalConfig = err.config;
   if (err.response.status === 401) {
-    // const user = await AsyncStorage.getItem('user');
-    // const userId = JSON.parse(user)?.user?._id;
-    // originalConfig._retry = true;
-    // try {
-    //   const rs = await axios.get(`/auth/tokens?userId=${userId}`);
-    //   setAsyncStorage('tokens', rs.data.data.tokens);
-    //   return axios(originalConfig);
-    // } catch (error) {
-    //   return Promise.reject(error);
-    // }
-  }
-  else{
+    AsyncStorage.clear();
+    RootNavigation.navigate(routes.auth);
+    Toast.show('Session expired, please login again');
+
+  } else {
     let error = err?.response?.data?.message;
     Toast.show(Array.isArray(error) ? error[0] : error);
   }

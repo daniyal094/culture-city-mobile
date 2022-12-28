@@ -12,6 +12,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1840DBD8295C7B68008DC8B7 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1840DBD7295C7B68008DC8B7 /* SimpleLineIcons.ttf */; };
 		18601A65290FCE2F006182A9 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 18601A64290FCE2F006182A9 /* Feather.ttf */; };
 		18601A67290FD3EB006182A9 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 18601A66290FD3EB006182A9 /* AntDesign.ttf */; };
 		18601A69290FD3F4006182A9 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 18601A68290FD3F4006182A9 /* Entypo.ttf */; };
@@ -48,6 +49,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = culturecity/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = culturecity/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = culturecity/main.m; sourceTree = "<group>"; };
+		1840DBD7295C7B68008DC8B7 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		18601A64290FCE2F006182A9 /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		18601A66290FD3EB006182A9 /* AntDesign.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		18601A68290FD3F4006182A9 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				1840DBD7295C7B68008DC8B7 /* SimpleLineIcons.ttf */,
 				18601A78290FD6C5006182A9 /* FontAwesome5_Solid.ttf */,
 				18601A76290FD6C1006182A9 /* FontAwesome5_Regular.ttf */,
 				18601A74290FD6B7006182A9 /* FontAwesome5_Brands.ttf */,
@@ -280,6 +283,7 @@
 			files = (
 				18601A6B290FD3FD006182A9 /* EvilIcons.ttf in Resources */,
 				18601A69290FD3F4006182A9 /* Entypo.ttf in Resources */,
+				1840DBD8295C7B68008DC8B7 /* SimpleLineIcons.ttf in Resources */,
 				18C233F8290FC7CB001E0982 /* Fonts in Resources */,
 				18601A6F290FD40F006182A9 /* Ionicons.ttf in Resources */,
 				18601A73290FD41A006182A9 /* MaterialIcons.ttf in Resources */,
@@ -534,7 +538,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_TEAM = 8XJT82FR94;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
@@ -544,7 +548,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -565,7 +569,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_TEAM = 8XJT82FR94;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = culturecity/Info.plist;
@@ -574,7 +578,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 0.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

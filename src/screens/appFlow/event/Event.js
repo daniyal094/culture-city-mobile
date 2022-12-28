@@ -8,7 +8,7 @@ import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
 import AntIcon from 'react-native-vector-icons/dist/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import {colors} from '../../../utils/constants/colors';
-import useEventApi from '../../../utils/api/event.api'
+import useEventApi from '../../../utils/api/event.api';
 const Event = () => {
   const navigation = useNavigation();
   const {useHandleGetAllEventsApi} = useEventApi();
@@ -24,12 +24,10 @@ const Event = () => {
         <View></View>
       </View>
       {isLoading ? (
-        <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
-
-          <ActivityIndicator size={'large'} color={colors.secondary}/>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size={'large'} color={colors.secondary} />
         </View>
       ) : (
-
         <ScrollView style={{marginBottom: height(9)}}>
           {eventList?.map((item, idx) => (
             <EvenListContainer

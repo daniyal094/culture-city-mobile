@@ -15,7 +15,6 @@ import banner3 from '../../../assets/images/slide3.jpg';
 import banner4 from '../../../assets/images/slide4.jpg';
 import {height, totalSize, width} from 'react-native-dimension';
 import FestivalCardBg from '../../../components/FestivalCardBg';
-import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import NearFestivalCard from '../../../components/NearFestivalCard';
 import TabBar from '../../../components/TabBar';
 import SliderWithDynamicChild from '../../../components/SliderWithDynamicChild';
@@ -85,6 +84,8 @@ const Dashboard = () => {
     //   settabData(homeEvents?.upcomingEvents);
     // }
   };
+
+
   const RenderItem = ({item}) => {
     const id = useId();
     return (
@@ -182,7 +183,7 @@ const Dashboard = () => {
                         fontWeight: '600',
                         letterSpacing: 1,
                       }}>
-                      Comming Soon
+                      Coming Soon
                     </Text>
                   </View>
                 )}
@@ -199,8 +200,10 @@ const Dashboard = () => {
                   RenderItem={UpcomingCard}
                   containerHeight={height(27)}
                   containerWidth={width(100)}
+                  
                 />
               </View>
+
               <Text style={styles.heading}>Events near you </Text>
               <View style={{marginLeft: width(4), marginBottom: height(10)}}>
                 {/* <NearFestivalCard /> */}

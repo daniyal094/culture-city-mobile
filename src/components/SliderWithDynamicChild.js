@@ -1,39 +1,40 @@
 import {Dimensions, FlatList, View, Animated} from 'react-native';
-import React, {useEffect, useId, useState} from 'react';
+import React, {useEffect, useId, useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
 const {width} = Dimensions.get('window');
 
-var flatList;
-const infiniteLoop = dataList => {
-  const numberofData = dataList.length;
-  let scrollValue = 0,
-    scrolled = 0;
-
-  setInterval(() => {
-    scrolled++;
-    if (scrolled < numberofData) {
-      scrollValue = scrollValue + width;
-    } else {
-      (scrollValue = 0), (scrolled = 0);
-    }
-    this.flatList.scrollToOffset({animated: true, offset: scrollValue});
-  }, 8000);
-};
-
-function SliderWithDynamicChild  ({
+function SliderWithDynamicChild({
   data,
   RenderItem,
   containerHeight = 100,
   containerWidth = '100%',
-})  {
+}) {
   const [dataList, setdataList] = useState(data);
+  const ref = useRef('');
   const scrollX = new Animated.Value(0);
   let position = Animated.divide(scrollX, width);
-  const id  = useId()
+  const id = useId();
+
   useEffect(() => {
     setdataList(data);
-    infiniteLoop(data);
+    const numberofData = dataList.length;
+    let scrollValue = 0,
+      scrolled = 0;
+
+    var sliderInterval = setInterval(() => {
+      scrolled++;
+      if (scrolled < numberofData) {
+        scrollValue = scrollValue + width;
+      } else {
+        (scrollValue = 0), (scrolled = 0);
+      }
+      ref.current.scrollToOffset({animated: true, offset: scrollValue});
+    }, 8000);
+    return () => {
+      clearInterval(sliderInterval);
+    };
   });
+
   if (data && data.length) {
     return (
       <>
@@ -41,8 +42,8 @@ function SliderWithDynamicChild  ({
           <FlatList
             numColumns={1}
             data={dataList}
-            ref={flatList => (this.flatList = flatList)}
-            renderItem={({item,idx}) => <RenderItem item={item} key={id}/>}
+            ref={flatList => (ref.current = flatList)}
+            renderItem={({item, idx}) => <RenderItem item={item} key={id} />}
             horizontal={true}
             keyExtractor={item => item.id}
             showsHorizontalScrollIndicator={false}
@@ -50,10 +51,9 @@ function SliderWithDynamicChild  ({
             snapToAlignment={'center'}
             scrollEventThrottle={16}
             decelerationRate="fast"
-            onScroll={Animated.event([
-              {nativeEvent: {contentOffset: {x: scrollX}}},
-            ],
-            {useNativeDriver: false},
+            onScroll={Animated.event(
+              [{nativeEvent: {contentOffset: {x: scrollX}}}],
+              {useNativeDriver: false},
             )}
           />
         </View>
@@ -85,7 +85,7 @@ function SliderWithDynamicChild  ({
     console.log('Please Provide a valid data List');
     return null;
   }
-};
+}
 
 export default SliderWithDynamicChild;
 

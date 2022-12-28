@@ -1,4 +1,4 @@
-import {View, Text, FlatList, ActivityIndicator,Pressable} from 'react-native';
+import {View, Text, FlatList, ActivityIndicator, Pressable} from 'react-native';
 import React from 'react';
 import styles from './Styles';
 import AntIcon from 'react-native-vector-icons/dist/AntDesign';
@@ -7,13 +7,17 @@ import {useNavigation} from '@react-navigation/native';
 import {colors} from '../../../utils/constants/colors';
 import useEventApi from '../../../utils/api/event.api';
 import EventCard from '../../../components/EventCard';
+import {useUser} from '../../../utils/context/UserContenxt';
+import CustomTable from '../../../components/CustomTable';
+// import CustomTable from '../../../components/CustomTable';
 const MyBooking = props => {
   const propsData = props.route.params;
+  const userData = useUser();
+  const user = userData?.user;
   const navigation = useNavigation();
   const {useFetchUserBookingEventsService} = useEventApi();
-  const {isLoading, data} = useFetchUserBookingEventsService(
-    propsData?.user?._id,
-  );
+  const {isLoading, data} = useFetchUserBookingEventsService(user?._id);
+
   return (
     <>
       {isLoading ? (
@@ -43,22 +47,32 @@ const MyBooking = props => {
               <Text style={styles.headerHeading}>Booking</Text>
               <View></View>
             </View>
-            {data.length > 0 ? (
-
-
-              <FlatList
-                data={data || []}
-                renderItem={({item, idx}) => (
-                  <EventCard data={item?.event} key={idx + 1} />
-                )}
-                horizontal={false}
-                keyExtractor={item => item.id}
-              />
+            {data?.length > 0 ? (
+              <>
+                <CustomTable
+                  tableHead={[
+                    // 'Order#',
+                    'Event',
+                    'Organizer',
+                    'Start Date',
+                    'Status',
+                    'Tickets',
+                  ]}
+                  tableData={data?.map((item, idx) => {
+                    return [
+                      // idx + 1,
+                      item.event.title,
+                      item.organizer.firstName + ' ' + item.organizer.lastName,
+                      item.event.startDateTime.split('T')[0],
+                      item.isConfirmed ? 'Booking Confirmed' : 'Pending',
+                      item.tickets,
+                    ];
+                  })}
+                />
+              </>
             ) : (
               <View style={styles.emptyListContainer}>
-                <Text style={styles.emptyListText}>
-                  No List to show yet.
-                </Text>
+                <Text style={styles.emptyListText}>No List to show yet.</Text>
               </View>
             )}
           </View>

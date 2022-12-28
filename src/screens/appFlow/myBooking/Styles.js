@@ -3,8 +3,8 @@ import {height, totalSize, width} from 'react-native-dimension';
 import {colors} from '../../../utils/constants/colors';
 const styles = StyleSheet.create({
   wraper: {
-    flex: 1,
-    backgroundColor: colors.light,
+    backgroundColor: colors.white,
+    flex: 1
   },
   header: {
     flexDirection: 'row',

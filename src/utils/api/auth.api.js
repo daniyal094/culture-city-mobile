@@ -138,6 +138,11 @@ export default useAuthApi = () => {
           routes: [{name: routes.auth}],
         }),
       );
+      updateUser({
+        user : '',
+        token : '',
+        role : ''
+      })
       // navigation.navigate(routes.auth);
     };
     const onError = error => {

@@ -1,4 +1,4 @@
-import {View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import styles from './Styles';
 import CustomButton from '../../../components/CustomButton';
@@ -34,51 +34,53 @@ const ProfileEdit = ({userData, setisEdit}) => {
   }, [isSuccess]);
 
   return (
-    <View style={styles.editProfileContainer}>
-      <CustomInput
-        value={profileData.firstName}
-        onChangeText={value =>
-          setprofileData({...profileData, firstName: value})
-        }
-      />
-      <CustomInput
-        value={profileData.lastName}
-        onChangeText={value =>
-          setprofileData({...profileData, lastName: value})
-        }
-      />
-      {userData?.role === 'organization' && (
+    <ScrollView>
+      <View style={styles.editProfileContainer}>
         <CustomInput
-          value={profileData.organization}
+          value={profileData.firstName}
           onChangeText={value =>
-            setprofileData({...profileData, organization: value})
+            setprofileData({...profileData, firstName: value})
           }
         />
-      )}
-      <DropDown
-        list={countries?.map(item => {
-          return {label: item?.name, value: item?._id};
-        })}
-        extraData={profileData}
-        setState={setprofileData}
-        stateKey="country"
-        defaultVlue={profileData.country}
-      />
-      <CustomInput
-        style={{...styles.editInput, minHeight: height(10)}}
-        value={profileData.bio}
-        multiline={true}
-        numberOfLines={3}
-        onChangeText={value => setprofileData({...profileData, bio: value})}
-      />
-      <CustomButton
-        labeColor={colors.light}
-        bgColor={colors.secondary}
-        onPress={profileChangeHandler}
-        label="Save Changes"
-        loading={isProfileLoading}
-      />
-    </View>
+        <CustomInput
+          value={profileData.lastName}
+          onChangeText={value =>
+            setprofileData({...profileData, lastName: value})
+          }
+        />
+        {userData?.role === 'organization' && (
+          <CustomInput
+            value={profileData.organization}
+            onChangeText={value =>
+              setprofileData({...profileData, organization: value})
+            }
+          />
+        )}
+        <DropDown
+          list={countries?.map(item => {
+            return {label: item?.name, value: item?._id};
+          })}
+          extraData={profileData}
+          setState={setprofileData}
+          stateKey="country"
+          defaultVlue={profileData.country}
+        />
+        <CustomInput
+          style={{...styles.editInput, minHeight: height(10)}}
+          value={profileData.bio}
+          multiline={true}
+          numberOfLines={3}
+          onChangeText={value => setprofileData({...profileData, bio: value})}
+        />
+        <CustomButton
+          labeColor={colors.light}
+          bgColor={colors.secondary}
+          onPress={profileChangeHandler}
+          label="Save Changes"
+          loading={isProfileLoading}
+        />
+      </View>
+    </ScrollView>
   );
 };
 

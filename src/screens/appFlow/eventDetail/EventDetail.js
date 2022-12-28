@@ -18,33 +18,51 @@ import BookEventModal from '../../../components/BookEventModal';
 import AntIcon from 'react-native-vector-icons/dist/AntDesign';
 import {useNavigation} from '@react-navigation/native';
 import useEventApi from '../../../utils/api/event.api';
+import useUserApi from '../../../utils/api/user.api';
 import {MEDIA_BASE_URL} from '../../../utils/constants/enums';
 import {routes} from '../../../utils/constants/routes';
 import {useUser} from '../../../utils/context/UserContenxt';
-import SimpleToast from 'react-native-simple-toast';
 import {sortArrObj} from '../../../utils/helper/functions';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
-
+import {useCart} from '../../../utils/context/CartContext';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 const EventDetail = props => {
   const userData = useUser();
   const user = userData?.user;
   const propsData = props.route.params;
+  const cartData = useCart();
   const navigation = useNavigation();
   const bottomSheetModalRef = useRef(null);
   const [isFav, setisFav] = useState(fevStatusData?.isEventFavourite);
+  const [isFollow, setisFollow] = useState(
+    followStatusData?.isOrganizerFollowed,
+  );
+
+  const [enabled, setenabled] = useState(false);
   const {
     useFetchEventByIdService,
     useFetchFavStatusEventsService,
     useHandleAddEventToFavouriteService,
     useHandleRemoveEventFromFavouriteService,
+    useFetchRemainingTickesService,
   } = useEventApi();
+  const {
+    useFetchIsFollowingOrgAndFavEventService,
+    useHandleFollowOrganizerService,
+    useHandleUnFollowOrganizerService,
+  } = useUserApi();
   const {isLoading: isEventDeatilLoading, data} = useFetchEventByIdService(
     propsData.id,
   );
+  console.log(data?.creator?._id);
   //to sort price ascending
   sortArrObj(data?.tickets?.categories, 'price');
   const {data: fevStatusData, refetch} = useFetchFavStatusEventsService(
     user?._id,
+    propsData.id,
+    enabled,
+  );
+  const {data: RemainingTickesData} = useFetchRemainingTickesService(
     propsData.id,
   );
 
@@ -58,9 +76,23 @@ const EventDetail = props => {
     user?._id,
   );
 
+  const {mutate: unfollow} = useHandleUnFollowOrganizerService(
+    user?._id,
+    data?.creator?._id,
+  );
+  const {mutate: follow} = useHandleFollowOrganizerService(
+    user?._id,
+    data?.creator?._id,
+  );
+
+  const {data: followStatusData, refetch: refetchFollow} =
+    useFetchIsFollowingOrgAndFavEventService(user?._id, propsData.id, enabled);
+
+  // console.log('followStatusData', followStatusData?.isOrganizerFollowed);
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
+
   const imgSrc =
     data?.media?.length > 0 && `${MEDIA_BASE_URL}${data?.media[0]}`;
   const imgProfile = !data?.creator?.profilePicture?.isCompleteUrl
@@ -68,24 +100,42 @@ const EventDetail = props => {
     : data?.creator?.profilePicture?.url;
 
   const favHandler = () => {
-    console.log("fevStatusData?.isEventFavourite",fevStatusData?.isEventFavourite);
     if (fevStatusData?.isEventFavourite) {
       // remove fav status
       removeEventFromFav();
       refetch();
-      setisFav(false)
+      setisFav(false);
     } else {
       // add fav status
       addEventToFavourite(propsData.id, user?._id);
       refetch();
-      setisFav(true)
+      setisFav(true);
     }
   };
+
+  const followHandler = () => {
+    if (followStatusData?.isOrganizerFollowed) {
+      unfollow();
+      refetchFollow();
+      setisFollow(false);
+    } else {
+      follow();
+      refetchFollow();
+      setisFollow(true);
+    }
+  };
+  // Event Sale End Time
+  const saleValid = new Date() < new Date(data?.endDateTime);
 
   useEffect(() => {
     setisFav(fevStatusData?.isEventFavourite);
   }, [fevStatusData]);
 
+  useEffect(() => {
+    if (userData.role === 'Seeker') {
+      setenabled(true);
+    }
+  }, []);
   return (
     <>
       {isEventDeatilLoading ? (
@@ -147,24 +197,28 @@ const EventDetail = props => {
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}>
-                    <Pressable style={{marginRight: 15}} onPress={favHandler}>
-                      <Icon
-                        name="favorite"
-                        size={totalSize(3)}
-                        color={isFav ? '#900' : colors.disableColor}
-                      />
-                    </Pressable>
-                    <Pressable
-                      style={styles.locationIcon}
-                      onPress={() =>
-                        navigation.navigate(routes.direction, {data: data})
-                      }>
-                      <FontAwesome
-                        name="location-arrow"
-                        color="#fff"
-                        size={totalSize(2)}
-                      />
-                    </Pressable>
+                    {enabled && (
+                      <>
+                        <Pressable
+                          style={{marginRight: 15}}
+                          onPress={favHandler}>
+                          <Icon
+                            name="favorite"
+                            size={totalSize(3)}
+                            color={isFav ? '#900' : colors.disableColor}
+                          />
+                        </Pressable>
+                        <Pressable
+                          style={styles.locationIcon}
+                          onPress={() => followHandler()}>
+                          <SimpleLineIcons
+                            name={isFollow ? 'user-unfollow' : 'user-follow'}
+                            color="#fff"
+                            size={totalSize(2)}
+                          />
+                        </Pressable>
+                      </>
+                    )}
                     {/* <Ionicons
           name="ios-chatbox-ellipses-outline"
           color={colors.primary}
@@ -198,7 +252,7 @@ const EventDetail = props => {
                   </Text>
                   <Text
                     style={{color: colors.disableColor, marginLeft: width(2)}}>
-                    {data?.startDateTime}
+                    {data?.startDateTime?.split('T')[0]}
                   </Text>
                 </View>
                 <View style={{...styles.flexRow, marginTop: height(0.5)}}>
@@ -210,7 +264,7 @@ const EventDetail = props => {
                       color: colors.disableColor,
                       marginLeft: width(3.3),
                     }}>
-                    {data?.endDateTime}
+                    {data?.endDateTime?.split('T')[0]}
                   </Text>
                 </View>
               </View>
@@ -223,31 +277,54 @@ const EventDetail = props => {
 
               <Text style={styles.discription}>{data?.about}</Text>
               {user?.role !== 'Organizer' && (
-                <View style={styles.btnContainer}>
-                  <CustomButton
-                    labeColor={colors.light}
-                    bgColor={
-                      userData.role === ''
-                        ? colors.disableColor
-                        : colors.secondary
-                    }
-                    onPress={() => {
-                      if (userData.role) {
-                        handlePresentModalPress();
-                      } else {
-                        SimpleToast.show('Please login first');
-                      }
-                    }}
-                    label="Book this Event"
-                    // loading={isLoginLoading}
-                  />
-                </View>
+                <>
+                  <View style={styles.btnContainer}>
+                    {!cartData?.organizerId ||
+                    cartData.organizerId === data?.creator?._id ? (
+                      <CustomButton
+                        labeColor={colors.light}
+                        bgColor={
+                          userData.role === '' || !saleValid
+                            ? colors.disableColor
+                            : colors.secondary
+                        }
+                        onPress={() => {
+                          if (userData.role && saleValid) {
+                            handlePresentModalPress();
+                          }
+                        }}
+                        label={saleValid ? 'Book this Event' : 'Sale has ended'}
+                        // loading={isLoginLoading}
+                      />
+                    ) : (
+                      <View style={styles.emptyCardAlert}>
+                        <Text style={{color: colors.lightGray}}>
+                          Empty your cart to purchase tickets from a different
+                          organizer
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                  {/* {!saleValid && (
+                    <Text
+                      style={{
+                        color: colors.black,
+                        textAlign: 'left',
+                        marginBottom: height(1),
+                        marginLeft: width(8),
+                      }}>
+                      Event has Ended
+                    </Text>
+                  )} */}
+                </>
               )}
             </ScrollView>
           </View>
           <BookEventModal
             bottomSheetModalRef={bottomSheetModalRef}
             data={data}
+            RemainingTickesData={RemainingTickesData}
+            eventId={propsData.id}
           />
         </>
       )}

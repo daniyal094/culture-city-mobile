@@ -36,6 +36,7 @@ const CustomInput = ({
       width: width(70),
       height: multiline ?  height(15) : height(6),
       paddingLeft: width(2),
+      color:colors.coal
     },
     inputIcon: {
       marginRight: 15,

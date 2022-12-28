@@ -15,11 +15,16 @@ import MyBookmark from '../../screens/appFlow/myBookmark/MyBookmark';
 import GetDirection from '../../screens/appFlow/getDirection/GetDirection';
 import AddEvent from '../../screens/appFlow/addEvent/AddEvent';
 import MyEvents from '../../screens/appFlow/myEvents/MyEvents';
+import Payment from '../../screens/appFlow/payment/Payment';
+import PaymentWebView from '../../screens/appFlow/payment/PaymentWebView';
+import Cart from '../../screens/appFlow/cart/Cart';
+import Bill from '../../screens/appFlow/Bill/Bill';
+import BookingSuccess from '../../screens/appFlow/bookingSuccess/BookingSuccess';
+import TicketOrders from '../../screens/appFlow/ticketOrders/TicketOrders';
 
 const AppStack = createNativeStackNavigator();
 
 const AppNavigation = props => {
-  const propsData = props.route.params;
   return (
     <AppStack.Navigator
       initialRouteName={routes.home}
@@ -41,6 +46,15 @@ const AppNavigation = props => {
       <AppStack.Screen name={routes.direction} component={GetDirection} />
       <AppStack.Screen name={routes.addEvent} component={AddEvent} />
       <AppStack.Screen name={routes.myEvents} component={MyEvents} />
+      <AppStack.Screen name={routes.payment} component={Payment} />
+      <AppStack.Screen name={routes.paymentWeb} component={PaymentWebView} />
+      <AppStack.Screen name={routes.cart} component={Cart} />
+      <AppStack.Screen name={routes.bill} component={Bill} />
+      <AppStack.Screen
+        name={routes.bookingSuccess}
+        component={BookingSuccess}
+      />
+      <AppStack.Screen name={routes.tickets} component={TicketOrders} />
     </AppStack.Navigator>
   );
 };

@@ -18,4 +18,6 @@ export const colors = {
   skyBlue: '#38A4DA',
   lightPink: '#F877B1',
   yellow: '#FBC500',
+  skin : '#F3F1DE',
+  sky  : '#54C6EC'
 };

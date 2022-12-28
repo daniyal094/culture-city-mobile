@@ -1,5 +1,5 @@
 import {View, Text, Pressable, Image, ScrollView} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, { useState} from 'react';
 import styles from './Styles';
 import TabBar from '../../../components/TabBar';
 import AntIcon from 'react-native-vector-icons/dist/AntDesign';

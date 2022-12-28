@@ -7,6 +7,9 @@ import Splash from '../screens/authFlow/splash/Splash';
 import {routes} from '../utils/constants/routes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useUserUpdate} from '../utils/context/UserContenxt';
+import {navigationRef} from './RootNavigation';
+import {useCartUpdate} from '../utils/context/CartContext';
+import { enableFreeze } from 'react-native-screens';
 
 const MainStack = createNativeStackNavigator();
 
@@ -15,8 +18,10 @@ export default function Navigation() {
   const [user, setuser] = useState({});
   const [isAuthenticated, setisAuthenticated] = useState(false);
   const updateUser = useUserUpdate();
+  const updateCart = useCartUpdate();
   const getAsyncStorage = async () => {
     const user = await AsyncStorage.getItem('user');
+    const cartData = await AsyncStorage.getItem('cartData');
     setisAuthenticated(
       JSON.parse(user)?.user._id && JSON.parse(user).user.isApproved
         ? true
@@ -28,6 +33,14 @@ export default function Navigation() {
       role: JSON.parse(user)?.user?.role || '',
       token: JSON.parse(user)?.tokens || '',
     });
+    updateCart(
+      JSON.parse(cartData) === null
+        ? {
+            organizerId: '',
+            cartItems: [],
+          }
+        : JSON.parse(cartData),
+    );
   };
 
   useEffect(() => {
@@ -40,7 +53,7 @@ export default function Navigation() {
   if (loading) return <Splash />;
   else
     return (
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <MainStack.Navigator
           screenOptions={{headerShown: false}}
           initialRouteName={isAuthenticated ? routes.app : routes.auth}>
@@ -58,3 +71,4 @@ export default function Navigation() {
       </NavigationContainer>
     );
 }
+enableFreeze(true)

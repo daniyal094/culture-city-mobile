@@ -3,6 +3,7 @@ import axiosInstance from '../config/axios-instance';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
+import {routes} from '../constants/routes';
 export default useEventApi = () => {
   const navigation = useNavigation();
 
@@ -97,7 +98,7 @@ export default useEventApi = () => {
   };
 
   //Fetch User Bookmark Events
-  const useFetchUserBookmarkEventsService = userId => {
+  const useFetchUserBookmarkEventsService = (userId, enabled) => {
     const fetchUserBookmarkEventsRequest = () => {
       const page = 1;
       const limit = 999;
@@ -116,6 +117,7 @@ export default useEventApi = () => {
       select: response => {
         return response?.data?.data;
       },
+      enabled: enabled,
     });
   };
 
@@ -156,6 +158,20 @@ export default useEventApi = () => {
     });
   };
 
+  // Reamingin Ticket Events
+  const useFetchRemainingTickesService = eventId => {
+    const fetchRemainingTickesRequest = () => {
+      return axiosInstance.get(`event/remaining-tickets?eventId=${eventId}`);
+    };
+
+    return useQuery(['RemainingTickes'], fetchRemainingTickesRequest, {
+      retry: 1,
+      select: response => {
+        return response?.data?.data;
+      },
+    });
+  };
+
   // Near By Events
   const useFetchNearByEventsService = () => {
     const fetchNearByEventsRequest = () => {
@@ -173,7 +189,7 @@ export default useEventApi = () => {
   };
 
   // Fetch favorite status of Events
-  const useFetchFavStatusEventsService = (seekerId, eventId) => {
+  const useFetchFavStatusEventsService = (seekerId, eventId, enabled) => {
     const fetchFavStatusEventsRequest = () => {
       return axiosInstance.get(
         `/event/favourite-followed?seekerId=${seekerId}&eventId=${eventId}`,
@@ -185,6 +201,7 @@ export default useEventApi = () => {
       select: response => {
         return response?.data?.data;
       },
+      enabled: enabled,
     });
   };
 
@@ -229,6 +246,59 @@ export default useEventApi = () => {
     });
   };
 
+  //Purchase Event
+  const useHandlePurchaseEventService = (userId, organizerId) => {
+    const HandlePurchaseEventRequest = tickets => {
+      return axiosInstance.post(
+        `/booking/?userId=${userId}&organizerId=${organizerId}`,
+        tickets,
+      );
+    };
+
+    const onSuccess = response => {
+      if (typeof response?.data?.data === 'string') {
+        navigation.navigate(routes.paymentWeb, {
+          link: response.data.data,
+          heading: 'Purchase Event',
+        });
+      } else {
+        console.log('response?.data?.data', response?.data?.data);
+        // router.push({name:ROUTES.TICKETS})
+      }
+    };
+
+    const onError = error => {
+      Toast.show(error.response.data.message);
+    };
+    return useMutation(tickets => HandlePurchaseEventRequest(tickets), {
+      retry: 0,
+      onSuccess,
+      onError,
+    });
+  };
+
+  //Fetch Organizer Ticket Orders
+  const useFetchOrganizerTicketOrdersService = userId => {
+    const fetchOrganizerTicketOrdersRequest = () => {
+      const page = 1;
+      const limit = 999;
+      return axiosInstance.get(
+        `/booking/orders?organizerId=${userId}&page=${page}&limit=${limit}`,
+      );
+    };
+
+    return useQuery(
+      ['ticket-orders', userId],
+      fetchOrganizerTicketOrdersRequest,
+      {
+        retry: 1,
+        select: response => {
+          return response?.data?.data;
+        },
+      },
+    );
+  };
+
   return {
     useHandleGetAllEventsApi,
     useFetchGetSearchEventsApi,
@@ -242,5 +312,8 @@ export default useEventApi = () => {
     useHandleRemoveEventFromFavouriteService,
     useHandleAddEventToFavouriteService,
     useFetchFavStatusEventsService,
+    useHandlePurchaseEventService,
+    useFetchRemainingTickesService,
+    useFetchOrganizerTicketOrdersService
   };
 };

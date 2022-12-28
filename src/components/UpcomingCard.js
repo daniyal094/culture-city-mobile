@@ -57,7 +57,9 @@ const UpcomingCard = ({item}) => {
               fontWeight: '500',
               fontSize: 13,
               marginVertical: height(0.3),
-            }}>
+            }}
+            numberOfLines={1}
+            >
             {item?.about}
           </Text>
           <Pressable

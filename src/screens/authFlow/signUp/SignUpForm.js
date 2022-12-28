@@ -47,12 +47,12 @@ const SignUpForm = ({isSignUpLoading, slectUserType, registerUser}) => {
             <View style={{width: width(50), alignItems: 'center'}}>
               <TouchableOpacity
                 onPress={() => navigation.navigate(routes.signin)}>
-                <Text>Login</Text>
+                <Text style={{color:colors.coal}}>Login</Text>
               </TouchableOpacity>
             </View>
             <View style={{width: width(50), alignItems: 'center'}}>
               <TouchableOpacity>
-                <Text>Sign Up</Text>
+                <Text style={{color:colors.coal}}>Sign Up</Text>
               </TouchableOpacity>
             </View>
           </View>

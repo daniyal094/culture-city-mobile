@@ -4,6 +4,7 @@ import {colors} from '../../../utils/constants/colors';
 const styles = StyleSheet.create({
   wraper: {
     backgroundColor: colors.white,
+    flex: 1,
   },
   backLink: {
     fontSize: totalSize(1.8),
@@ -74,6 +75,7 @@ const styles = StyleSheet.create({
     paddingLeft: width(8),
     marginTop: height(2),
     marginBottom: height(5),
+    flex:1
   },
   historyHeading: {
     color: colors.white,
@@ -102,7 +104,6 @@ const styles = StyleSheet.create({
     paddingLeft: width(2),
     borderRadius: 20,
     marginVertical: height(2),
-    
   },
 });
 export default styles;

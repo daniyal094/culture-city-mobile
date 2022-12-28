@@ -53,15 +53,24 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   btnContainer: {
-    marginVertical: height(1),
+    marginTop: height(1),
     width: width(100),
-
     alignItems: 'center',
+    marginBottom:height(2)
   },
   backLink: {
     fontSize: totalSize(2),
     color: colors.white,
     marginLeft: 3,
+  },
+  emptyCardAlert: {
+    backgroundColor: colors.sky,
+    borderRadius: 7,
+    paddingVertical: height(2),
+    paddingHorizontal: width(1),
+    width:width(96),
+    justifyContent:'center',
+    alignItems:'center',
   },
 });
 export default styles;

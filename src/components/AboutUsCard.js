@@ -45,12 +45,12 @@ const styles = StyleSheet.create({
         fontSize:totalSize(1.5),
         textAlign:'justify',
         marginBottom:height(2),
-        width:width(75)
+        width:width(75),
     },
     imgStyle:{
         position:'absolute',
         top:height(3.5),
-        left:-width(6),
+        left:-width(7),
         zIndex:99
     }
 });

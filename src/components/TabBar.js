@@ -22,7 +22,8 @@ const TabBar = ({selectedTab}) => {
   }, []);
 
   const handlePresentSearchModalPress = useCallback(() => {
-    searchSheetModalRef.current?.present();
+    searchSheetModalRef.current.present();
+    // console.log( searchSheetModalRef.current);
   }, []);
 
   return (
@@ -123,9 +124,8 @@ const TabBar = ({selectedTab}) => {
           onPress={() => {
             if (user.role) {
               navigation.navigate(routes.profile);
-            }
-            else{
-              SimpleToast.show("Please Login First")
+            } else {
+              SimpleToast.show('Please Login First');
             }
           }}>
           <View
@@ -153,7 +153,9 @@ const TabBar = ({selectedTab}) => {
           </View>
         </Pressable>
       </View>
+
       <SearchBottomSheet searchSheetModalRef={searchSheetModalRef} />
+
       <CustomBottomSheet bottomSheetModalRef={bottomSheetModalRef} />
     </>
   );

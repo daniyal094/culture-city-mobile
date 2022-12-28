@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {height, totalSize, width} from 'react-native-dimension';
@@ -6,13 +6,20 @@ import {colors} from '../utils/constants/colors';
 import AntIcon from 'react-native-vector-icons/dist/AntDesign';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import CustomButton from './CustomButton';
-import DropDown from './DropDown';
-const BookEventModal = ({bottomSheetModalRef, data}) => {
-  // Ticket Counter
-  const [counter, setcounter] = useState(0);
-  const [ticketType, setticketType] = useState('');
+
+import TicketCounter from './TicketCounter';
+import {useNavigation} from '@react-navigation/native';
+import {routes} from '../utils/constants/routes';
+const BookEventModal = ({
+  bottomSheetModalRef,
+  data,
+  RemainingTickesData,
+  eventId,
+}) => {
+  const navigation = useNavigation();
+
   // variables
-  const snapPoints = useMemo(() => ['54%', '54%'], []);
+  const snapPoints = useMemo(() => ['60%', '60%'], []);
 
   // callbacks
   const closeHandler = useCallback(() => {
@@ -22,15 +29,6 @@ const BookEventModal = ({bottomSheetModalRef, data}) => {
     console.log('handleSheetChanges', index);
   }, []);
 
-  // Ticket Count Handler
-  const countHandler = type => {
-    if (type === 'plus') {
-      setcounter(counter + 1);
-    }
-    if (type === 'minus' && counter > 0) {
-      setcounter(counter - 1);
-    }
-  };
   return (
     <>
       <BottomSheetModalProvider>
@@ -68,7 +66,7 @@ const BookEventModal = ({bottomSheetModalRef, data}) => {
                 </Text>
                 <Text
                   style={{color: colors.disableColor, marginLeft: width(2)}}>
-                  {data?.startDateTime}
+                  {data?.startDateTime?.split('T')[0]}
                 </Text>
               </View>
               <View style={{...styles.flexRow, marginTop: height(0.5)}}>
@@ -77,7 +75,7 @@ const BookEventModal = ({bottomSheetModalRef, data}) => {
                 </Text>
                 <Text
                   style={{color: colors.disableColor, marginLeft: width(3.3)}}>
-                  {data?.endDateTime}
+                  {data?.endDateTime?.split('T')[0]}
                 </Text>
               </View>
             </View>
@@ -88,57 +86,35 @@ const BookEventModal = ({bottomSheetModalRef, data}) => {
                 borderTopColor: colors.disableColor,
                 marginVertical: height(2),
               }}></View>
+            {data?.tickets?.categories?.map((item, index) => {
+              const obj = {
+                ...item,
+                limit: RemainingTickesData?.find(i => i._id === item._id)
+                  ?.ticketsRemaining,
+              };
+              return (
+                <View key={index + 34123}>
+                  <TicketCounter
+                    data={obj}
+                    eventId={eventId}
+                    organizerId={data?.creator?._id}
+                    eventName={data?.title}
+                    isCart={false}
+                  />
+                </View>
+              );
+            })}
 
-            <View style={styles.ticketContainer}>
-              <Text
-                style={{
-                  color: colors.coal,
-                  fontWeight: '500',
-                  fontSize: totalSize(2),
-                }}>
-                Tickets{' '}
-              </Text>
-              <View style={{...styles.flexRow, alignItems: 'center'}}>
-                <Pressable
-                  style={styles.counterBox}
-                  onPress={() => countHandler('minus')}>
-                  <AntIcon
-                    name="minus"
-                    color={colors.black}
-                    size={totalSize(1.3)}
-                  />
-                </Pressable>
-                <Text style={{color: colors.black}}>{counter}</Text>
-                <Pressable
-                  style={styles.counterBox}
-                  onPress={() => countHandler('plus')}>
-                  <AntIcon
-                    name="plus"
-                    color={colors.black}
-                    size={totalSize(1.3)}
-                  />
-                </Pressable>
-              </View>
-            </View>
-            {!data?.tickets?.isFree && (
-              <DropDown
-                list={data?.tickets?.categories?.map(item => {
-                  const ticket = `${item?.name}  $${item?.price}`;
-                  return {label: ticket, value: item};
-                })}
-                setState={setticketType}
-                stateKey="ticketType"
-              />
-            )}
             <View style={styles.btnContainer}>
               <CustomButton
                 labeColor={colors.light}
                 bgColor={colors.secondary}
                 onPress={() => {
-                  console.log('herer');
+                  navigation.navigate(routes.cart);
+                  closeHandler();
                 }}
                 label="Make a Reservation"
-                // loading={isLoginLoading}
+                // loading={isLoading}
               />
             </View>
           </BottomSheetModal>
@@ -150,7 +126,6 @@ const BookEventModal = ({bottomSheetModalRef, data}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
   },
   contentContainer: {
@@ -172,25 +147,11 @@ const styles = StyleSheet.create({
   flexRow: {
     flexDirection: 'row',
   },
-  ticketContainer: {
-    paddingHorizontal: width(7),
-    paddingVertical: height(3),
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   btnContainer: {
     marginVertical: height(1),
     width: width(100),
 
     alignItems: 'center',
-  },
-  counterBox: {
-    padding: totalSize(1),
-    backgroundColor: colors.lightGray,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 7,
-    marginHorizontal: width(2),
   },
 });
 

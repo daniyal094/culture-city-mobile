@@ -19,20 +19,21 @@ import useAuthApi from '../../../utils/api/auth.api';
 import FeatherIcons from 'react-native-vector-icons/Feather';
 import {IsEmail} from '../../../utils/helper/functions';
 import Toast from 'react-native-simple-toast';
-import { useUserUpdate } from '../../../utils/context/UserContenxt';
+import {useUserUpdate} from '../../../utils/context/UserContenxt';
 const SignIn = () => {
   const navigation = useNavigation();
   const [loginData, setloginData] = useState({
     email: '',
     password: '',
-    rememberMe: false,
+    rememberMe: true,
     accessType: ACCESS_TYPE.INTERNAL,
     accessToken: '',
+    isAdmin: false,
   });
   const [showPass, setshowPass] = useState(true);
   const {useHandleLoginApi} = useAuthApi();
 
-  const {isLoading: isLoginLoading, mutate,isSuccess} = useHandleLoginApi();
+  const {isLoading: isLoginLoading, mutate, isSuccess} = useHandleLoginApi();
   const handleLoginSubmit = () => {
     if (IsEmail(loginData.email)) {
       mutate(loginData);
@@ -40,8 +41,6 @@ const SignIn = () => {
       Toast.show('Email is not Correct');
     }
   };
-
-
 
   return (
     <View style={styles.wrapper}>
@@ -64,13 +63,13 @@ const SignIn = () => {
               }}>
               <View style={{width: width(50), alignItems: 'center'}}>
                 <TouchableOpacity>
-                  <Text>Login</Text>
+                  <Text style={{color:colors.coal}}>Login</Text>
                 </TouchableOpacity>
               </View>
               <View style={{width: width(50), alignItems: 'center'}}>
                 <TouchableOpacity
                   onPress={() => navigation.navigate(routes.signup)}>
-                  <Text>Sign Up</Text>
+                  <Text style={{color:colors.coal}}>Sign Up</Text>
                 </TouchableOpacity>
               </View>
             </View>
