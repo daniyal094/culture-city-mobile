@@ -1,6 +1,10 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
-import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetScrollView,
+} from '@gorhom/bottom-sheet';
 import {height, totalSize, width} from 'react-native-dimension';
 import {colors} from '../utils/constants/colors';
 import AntIcon from 'react-native-vector-icons/dist/AntDesign';
@@ -63,9 +67,9 @@ const SearchBottomSheet = ({searchSheetModalRef}) => {
 
   const searchHandler = async () => {
     // if (searchData.dateFilter !== '' && searchData.dateFilter !== '') {
-      mutate(searchData);
-      closeHandler()
-    // } 
+    mutate(searchData);
+    closeHandler();
+    // }
     // else {
     //   SimpleToast.show('Fill Search field and date type');
     // }
@@ -179,7 +183,6 @@ const SearchBottomSheet = ({searchSheetModalRef}) => {
 
 const styles = StyleSheet.create({
   container: {
- 
     justifyContent: 'center',
   },
   rowCenter: {

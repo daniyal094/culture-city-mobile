@@ -1,5 +1,5 @@
 import {View, Text, Pressable} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import styles from './Styles';
 import {useCart, useCartUpdate} from '../../../utils/context/CartContext';
 import AntIcon from 'react-native-vector-icons/dist/AntDesign';
@@ -18,7 +18,7 @@ const Cart = () => {
   const CartUpdate = useCartUpdate();
   const {useFetchComisionService} = userApi();
   const {loading, data} = useFetchComisionService();
-
+  const [canproceed, setcanproceed] = useState(false);
   const clearCartHandler = () => {
     setAsyncStorage('cartData', {
       organizerId: '',
@@ -92,7 +92,17 @@ const Cart = () => {
               label={'Proceed to Checkout'}
               labeColor={colors.light}
               bgColor={colors.secondary}
-              onPress={() => navigation.navigate(routes.bill, {data: data})}
+              onPress={() => {
+                if (
+                  cartData?.cartItems?.map(item =>
+                    item?.ticketList?.filter(ticket => ticket?.ticketCount < 1),
+                  )[0].length < 1
+                ) {
+                  navigation.navigate(routes.bill, {data: data});
+                } else {
+                  alert('Ticket can not be zero');
+                }
+              }}
             />
           </View>
         </>

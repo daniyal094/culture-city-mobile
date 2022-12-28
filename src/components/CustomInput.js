@@ -18,7 +18,7 @@ const CustomInput = ({
   secureTextEntry = false,
   iconPressHandler,
   multiline = false,
-  numberOfLines = 1
+  numberOfLines = 1,
 }) => {
   const styles = StyleSheet.create({
     inputWrapper: {
@@ -34,9 +34,9 @@ const CustomInput = ({
     },
     input: {
       width: width(70),
-      height: multiline ?  height(15) : height(6),
+      height: multiline ? height(15) : height(6),
       paddingLeft: width(2),
-      color:colors.coal
+      color: colors.coal,
     },
     inputIcon: {
       marginRight: 15,
@@ -53,6 +53,8 @@ const CustomInput = ({
         autoCapitalize={'none'}
         multiline={multiline}
         numberOfLines={numberOfLines}
+        placeholderTextColor={colors.gray}
+        showSoftInputOnFocus={false}
       />
       {icon && (
         <Pressable style={{marginRight: width(3)}} onPress={iconPressHandler}>
@@ -61,8 +63,6 @@ const CustomInput = ({
       )}
     </View>
   );
-  
 };
 
 export default CustomInput;
-

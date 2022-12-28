@@ -36,6 +36,7 @@ export default useUserApi = () => {
     };
 
     const onSuccess = response => {
+      console.log(response.data);
       Toast.show(response.data?.message);
     };
     const onError = error => {

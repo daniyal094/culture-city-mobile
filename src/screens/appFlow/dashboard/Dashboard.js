@@ -32,7 +32,7 @@ const Dashboard = () => {
     useFetchHomeEventsService();
   const {isLoading: isLoadingNearByEvent, data: nearByEvents} =
     useFetchNearByEventsService();
-  const [selectedtab, setselectedtab] = useState('Featured');
+  const [selectedtab, setselectedtab] = useState('Populer');
   const [tabData, settabData] = useState(nearByEvents);
 
   const navigation = useNavigation();
@@ -68,7 +68,7 @@ const Dashboard = () => {
   ];
 
   useEffect(() => {
-    settabData(homeEvents?.featuredEvents);
+    settabData(homeEvents?.popularEvents);
   }, [isLoadingHomeEvent]);
 
   const tabChageHandler = tabName => {

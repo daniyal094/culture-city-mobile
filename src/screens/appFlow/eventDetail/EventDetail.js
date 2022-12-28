@@ -54,7 +54,6 @@ const EventDetail = props => {
   const {isLoading: isEventDeatilLoading, data} = useFetchEventByIdService(
     propsData.id,
   );
-  console.log(data?.creator?._id);
   //to sort price ascending
   sortArrObj(data?.tickets?.categories, 'price');
   const {data: fevStatusData, refetch} = useFetchFavStatusEventsService(

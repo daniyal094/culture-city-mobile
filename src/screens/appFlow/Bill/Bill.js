@@ -24,7 +24,6 @@ const Bill = props => {
     cartData?.organizerId,
   );
 
-  console.log(cartData);
   const reservationHandler = () => {
     const purchase = cartData.cartItems.map(item => {
       return {
@@ -49,8 +48,8 @@ const Bill = props => {
   return (
     <>
       <View style={styles.wraper}>
-        <Header heading={"Checkout"}/>
-   
+        <Header heading={'Checkout'} />
+
         <View style={styles.checkoutContainer}>
           <ScrollView>
             <Text style={styles.checkoutHeading}>Order Summary</Text>
@@ -61,20 +60,22 @@ const Bill = props => {
                     {item?.eventName}
                   </Text>
                   {item?.ticketList?.map((ticket, index) => {
-                    const plateformFee =
-                      ticket?.ticketType?.price <= 101
-                        ? ticket?.ticketType?.price *
-                          (data.length && data[0].percent / 100)
-                        : ticket?.ticketType?.price *
-                          (data.length && data[1].percent / 100);
+                    let plateformFee;
+                    let stripeFee;
+                    if (ticket?.ticketCount > 0) {
+                      plateformFee =
+                        ticket?.ticketType?.price <= 101
+                          ? ticket?.ticketType?.price *
+                            (data.length && data[0].percent / 100)
+                          : ticket?.ticketType?.price *
+                            (data.length && data[1].percent / 100);
 
-                    const stripeFee = ticket?.ticketType?.price * (3 / 100);
-                    totalAmount +=
-                      plateformFee +
-                      stripeFee +
-                      (ticket?.ticketCount * ticket?.ticketType?.price +
+                      stripeFee = ticket?.ticketType?.price * (3 / 100);
+                      totalAmount +=
                         plateformFee +
-                        stripeFee);
+                        stripeFee +
+                        ticket?.ticketCount * ticket?.ticketType?.price;
+                    }
                     return (
                       <View
                         key={index}
@@ -125,9 +126,11 @@ const Bill = props => {
                             marginRight: width(3),
                           }}>
                           $
-                          {ticket?.ticketCount * ticket?.ticketType?.price +
-                            plateformFee +
-                            stripeFee}
+                          {ticket?.ticketCount > 0
+                            ? ticket?.ticketCount * ticket?.ticketType?.price +
+                              plateformFee +
+                              stripeFee
+                            : 0}
                         </Text>
                       </View>
                     );
@@ -158,7 +161,7 @@ const Bill = props => {
                 {totalAmount}
               </Text>
             </View>
-            <View style={{alignItems: 'center', width: width(100)}}>
+            <View style={{alignItems: 'center', width: width(90)}}>
               <CustomButton
                 label={'Proceed'}
                 labeColor={colors.light}

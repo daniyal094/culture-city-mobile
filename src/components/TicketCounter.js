@@ -1,4 +1,4 @@
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Alert, Pressable, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {colors} from '../utils/constants/colors';
 import {height, totalSize, width} from 'react-native-dimension';
@@ -119,6 +119,7 @@ const TicketCounter = ({
       };
       updateCart(obj);
       setcounter(counter - 1);
+
       // console.log(obj.cartItems[hasEventIdx],hasTicketType);
       // setcounter(counter - 1);
       //   data = {
@@ -127,44 +128,99 @@ const TicketCounter = ({
       //   };
     }
   };
+  const deleteHandler = () => {
+    // console.log(cartData);
+    const hasEventIdx = cartData.cartItems.findIndex(
+      item => item.eventId === eventId,
+    );
+    const hasTicketType = cartData.cartItems[hasEventIdx].ticketList.findIndex(
+      item => item.ticketType._id === data._id,
+    );
+    const obj = {
+      ...cartData,
+    };
+
+    if (cartData.cartItems.length > 1) {
+      obj.cartItems[hasEventIdx].ticketList.splice(hasTicketType, 1);
+      if (obj.cartItems[hasEventIdx].ticketList.length === 0) {
+        obj.cartItems.splice(hasEventIdx, 1);
+      }
+    }
+    if (cartData.cartItems.length === 1) {
+      if (obj.cartItems[hasEventIdx].ticketList.length > 1) {
+        obj.cartItems[hasEventIdx].ticketList.splice(hasTicketType, 1);
+      } else {
+        alert('Press Clear cart to remove all tickets');
+      }
+    }
+    updateCart(obj);
+    // console.log(cartData.cartItems[hasEventIdx]);
+    //  const ans = cartData.cartItems.filter(item => item.ticketList.filter(ticket => ticket.ticketType._id
+    //     !== data._id))
+    //     console.log(ans);
+  };
 
   return (
-    <View style={styles.ticketContainer}>
-      <Text
-        style={{
-          color: colors.coal,
-          fontWeight: '500',
-          fontSize: totalSize(2),
-        }}>
-        {data?.name}
-      </Text>
-      {data?.limit > 0 && saleValid ? (
-        <View style={{...styles.flexRow, alignItems: 'center'}}>
-          <Pressable
-            style={styles.counterBox}
-            onPress={() => countHandler('minus')}>
-            <AntIcon name="minus" color={colors.black} size={totalSize(1.3)} />
-          </Pressable>
-          <Text style={{color: colors.black, marginHorizontal: width(1)}}>
-            {counter} /{' '}
-            <Text style={{fontWeight: '600', color: colors.black}}>
-              {data?.limit < 10 ? '0' + data?.limit : data?.limit}
-            </Text>
+    <>
+      <View style={styles.ticketContainer}>
+        <View style={styles.flexRow}>
+          {isCart && (
+            <Pressable
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingBottom: 5,
+                marginRight: width(3),
+              }}
+              onPress={() => deleteHandler()}>
+              <AntIcon
+                name={'delete'}
+                size={totalSize(1.7)}
+                color={colors.danger}
+              />
+            </Pressable>
+          )}
+          <Text
+            style={{
+              color: colors.coal,
+              fontWeight: '500',
+              fontSize: totalSize(2),
+            }}>
+            {data?.name}
           </Text>
-          <Pressable
-            style={styles.counterBox}
-            onPress={() => countHandler('plus')}>
-            <AntIcon name="plus" color={colors.black} size={totalSize(1.3)} />
-          </Pressable>
         </View>
-      ) : (
-        <>
-          <View style={styles.sellEndContainer}>
-            <Text style={styles.sellEndedText}>Sale Ended</Text>
+        {data?.limit > 0 && saleValid ? (
+          <View style={{...styles.flexRow, alignItems: 'center'}}>
+            <Pressable
+              style={styles.counterBox}
+              onPress={() => countHandler('minus')}>
+              <AntIcon
+                name="minus"
+                color={colors.black}
+                size={totalSize(1.3)}
+              />
+            </Pressable>
+            <Text style={{color: colors.black, marginHorizontal: width(1)}}>
+              {counter} /{' '}
+              <Text style={{fontWeight: '600', color: colors.black}}>
+                {data?.limit < 10 ? '0' + data?.limit : data?.limit}
+              </Text>
+            </Text>
+            <Pressable
+              style={styles.counterBox}
+              onPress={() => countHandler('plus')}>
+              <AntIcon name="plus" color={colors.black} size={totalSize(1.3)} />
+            </Pressable>
           </View>
-        </>
-      )}
-    </View>
+        ) : (
+          <>
+            <View style={styles.sellEndContainer}>
+              <Text style={styles.sellEndedText}>Sale Ended</Text>
+            </View>
+          </>
+        )}
+      </View>
+    </>
   );
 };
 

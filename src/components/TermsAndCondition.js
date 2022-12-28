@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import {
-  ANIMATION_CONFIGS,
+  
   BottomSheetModal,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
