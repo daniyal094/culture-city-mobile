@@ -169,36 +169,65 @@ const AddEvent = () => {
         </Text>
         <Text style={styles.detailText}>Event Start Date </Text>
         <InputDatePicker
-          value={addEventdata.startDate}
+          value={
+            addEventdata.startDate &&
+            `${addEventdata?.startDate?.getDate()}-${
+              addEventdata?.startDate?.getMonth() + 1
+            }-${addEventdata?.startDate?.getFullYear()}`
+          }
           setValue={setaddEventdata}
           extraData={addEventdata}
           stateName="startDate"
+          placeHolder="Start Date"
         />
         <Text style={styles.detailText}>Event Start Time</Text>
         <InputDatePicker
-          value={addEventdata.startTime}
+          value={
+            addEventdata.startTime &&
+            `${
+              addEventdata?.startTime?.getHours() < 10
+                ? `0${addEventdata?.startTime?.getHours()}`
+                : addEventdata?.startTime?.getHours()
+            }:${addEventdata?.startTime?.getMinutes()}`
+          }
           setValue={setaddEventdata}
           extraData={addEventdata}
           stateName="startTime"
           mode="time"
+          placeHolder="Start Time"
         />
         <Text style={{...styles.detailText, marginTop: height(2)}}>
           Event End Date
         </Text>
         <InputDatePicker
-          value={addEventdata.endDate}
+          value={
+            addEventdata.endDate &&
+            `${addEventdata?.endDate?.getDate()}-${
+              addEventdata?.endDate?.getMonth() + 1
+            }-${addEventdata?.endDate?.getFullYear()}`
+          }
           setValue={setaddEventdata}
           extraData={addEventdata}
           stateName="endDate"
+          placeHolder="End Date"
         />
         <Text style={{...styles.detailText, marginTop: height(2)}}>
           Event End Time
         </Text>
         <InputDatePicker
-          value={addEventdata.endTime}
+          value={
+            addEventdata.endTime &&
+            `${
+              addEventdata?.endTime?.getHours() < 10
+                ? `0${addEventdata?.endTime?.getHours()}`
+                : addEventdata?.endTime?.getHours()
+            }:${addEventdata?.endTime?.getMinutes()}`
+          }
           setValue={setaddEventdata}
           extraData={addEventdata}
           stateName="endTime"
+          mode="time"
+          placeHolder="End Time"
         />
         <DropDown
           list={getDropDownObj(timeZoneData, 'label')}
@@ -411,7 +440,18 @@ const AddEvent = () => {
           onPress={() => {
             setaddEventdata({
               ...addEventdata,
-              ticketList: [...addEventdata.ticketList, {}],
+              ticketList: [
+                ...addEventdata.ticketList,
+                {
+                  categoryName: '',
+                  quantity: '',
+                  price: '',
+                  salestartdate: '',
+                  salestarttime: '',
+                  salesenddate: '',
+                  salesendtime: '',
+                },
+              ],
             });
           }}>
           <Text

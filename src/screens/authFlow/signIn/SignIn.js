@@ -5,7 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from './Styles';
 import authBanner from '../../../assets/images/authBanner.png';
 import CustomInput from '../../../components/CustomInput';
@@ -19,7 +19,11 @@ import useAuthApi from '../../../utils/api/auth.api';
 import FeatherIcons from 'react-native-vector-icons/Feather';
 import {IsEmail} from '../../../utils/helper/functions';
 import Toast from 'react-native-simple-toast';
-import {useUserUpdate} from '../../../utils/context/UserContenxt';
+import {
+  GoogleSignin,
+  statusCodes,
+  GoogleSigninButton,
+} from '@react-native-google-signin/google-signin';
 const SignIn = () => {
   const navigation = useNavigation();
   const [loginData, setloginData] = useState({
@@ -42,6 +46,35 @@ const SignIn = () => {
     }
   };
 
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '428562224901-faas9fkjq18usvsff6jllmskjkvljosc.apps.googleusercontent.com',
+      offlineAccess: false,
+      // forceCodeForRefreshToken: true,
+    });
+  }, []);
+  const signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log(userInfo);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('statusCodes.SIGN_IN_CANCELLED');
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log('statusCodes.IN_PROGRESS');
+
+        // operation (e.g. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+        console.log('statusCodes.PLAY_SERVICES_NOT_AVAILABLE');
+      } else {
+        console.log(error, 'Some other error'); // some other error happened
+      }
+    }
+  };
   return (
     <View style={styles.wrapper}>
       <ImageBackground
@@ -116,18 +149,20 @@ const SignIn = () => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <CustomButton
-              labeColor={colors.black}
-              bgColor={colors.white}
-              onPress={() => alert('Pressed')}
-              label="Sign In with Google"
+            <GoogleSigninButton
+              style={{width: width(85), height: 48, borderRadius:10,marginTop:5}}
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Light}
+              onPress={signIn}
+              // disabled={this.state.isSigninInProgress}
             />
-            <CustomButton
+            
+            {/* <CustomButton
               labeColor={colors.white}
               bgColor={colors.primary}
               onPress={() => alert('Pressed')}
               label="Sign In with Facebook"
-            />
+            /> */}
             <View
               style={{
                 marginVertical: height(2),
@@ -141,8 +176,7 @@ const SignIn = () => {
                 }}>
                 Continue as
               </Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate(routes.app)}>
+              <TouchableOpacity onPress={() => navigation.navigate(routes.app)}>
                 <Text
                   style={{
                     fontWeight: '700',

@@ -5,6 +5,15 @@ import {colors} from '../../../utils/constants/colors';
 import {height, totalSize, width} from 'react-native-dimension';
 import InputDatePicker from '../../../components/InputDatePicker';
 const TicketListContainer = ({addEventdata, setaddEventdata, index}) => {
+  // {
+  //   categoryName: '',
+  //   quantity: '',
+  //   price: '',
+  //   salestartdate: '',
+  //   salestarttime: '',
+  //   salesenddate: '',
+  //   salesendtime: '',
+  // },
   return (
     <View style={styles.ticketListContainer}>
       <Pressable
@@ -37,8 +46,12 @@ const TicketListContainer = ({addEventdata, setaddEventdata, index}) => {
           marginVertical: height(1),
         }}
         placeholder="Category Name"
-        //    onChangeText={() => setaddEventdata{}}
-        // value=''
+        onChangeText={text => {
+          const obj = {...addEventdata};
+          obj.ticketList[index].categoryName = text;
+          setaddEventdata(obj);
+        }}
+        value={addEventdata.ticketList[index].categoryName}
       />
       <View style={styles.row}>
         <TextInput
@@ -46,14 +59,18 @@ const TicketListContainer = ({addEventdata, setaddEventdata, index}) => {
             borderColor: colors.black,
             borderWidth: 1,
             borderRadius: 7,
-            width: '50%',
-            padding: 15,
+            width: '49%',
+            padding: 7,
             marginVertical: height(1),
             marginRight: 5,
           }}
           placeholder="Quantity"
-          //    onChangeText={() => setaddEventdata{}}
-          // value=''
+          onChangeText={text => {
+            const obj = {...addEventdata};
+            obj.ticketList[index].quantity = text;
+            setaddEventdata(obj);
+          }}
+          value={addEventdata.ticketList[index].quantity}
         />
         <TextInput
           style={{
@@ -61,12 +78,16 @@ const TicketListContainer = ({addEventdata, setaddEventdata, index}) => {
             borderWidth: 1,
             borderRadius: 7,
             width: '49%',
-            padding: 15,
+            padding: 7,
             marginVertical: height(1),
           }}
           placeholder="Price"
-          //    onChangeText={() => setaddEventdata{}}
-          // value=''
+          onChangeText={text => {
+            const obj = {...addEventdata};
+            obj.ticketList[index].price = text;
+            setaddEventdata(obj);
+          }}
+          value={addEventdata.ticketList[index].price}
         />
       </View>
       <View style={styles.row}>
@@ -79,7 +100,18 @@ const TicketListContainer = ({addEventdata, setaddEventdata, index}) => {
           }}
           placeHolder="Sales Start Date"
           mode="date"
-          value=""
+          setValue={date => {
+            const obj = {...addEventdata};
+            obj.ticketList[index].salestartdate = date?.startDate;
+            setaddEventdata(obj);
+          }}
+          stateName="startDate"
+          value={
+            addEventdata.ticketList[index].salestartdate &&
+            `${addEventdata.ticketList[index].salestartdate?.getDate()}-${
+              addEventdata.ticketList[index].salestartdate?.getMonth() + 1
+            }-${addEventdata.ticketList[index].salestartdate?.getFullYear()}`
+          }
         />
         <InputDatePicker
           borderColor={colors.black}
@@ -90,7 +122,20 @@ const TicketListContainer = ({addEventdata, setaddEventdata, index}) => {
           }}
           placeHolder="Sales Start Time"
           mode="time"
-          value=""
+          stateName={'startTime'}
+          setValue={date => {
+            const obj = {...addEventdata};
+            obj.ticketList[index].salestarttime = date?.startTime;
+            setaddEventdata(obj);
+          }}
+          value={
+            addEventdata.ticketList[index].salestarttime &&
+            `${
+              addEventdata.ticketList[index].salestarttime?.getHours() < 10
+                ? `0${addEventdata.ticketList[index].salestarttime?.getHours()}`
+                : addEventdata.ticketList[index].salestarttime?.getHours()
+            }:${addEventdata.ticketList[index].salestarttime?.getMinutes()}`
+          }
         />
       </View>
       <View style={styles.row}>
@@ -103,14 +148,38 @@ const TicketListContainer = ({addEventdata, setaddEventdata, index}) => {
           }}
           placeHolder="Sales End Date"
           mode="date"
-          value=""
+          setValue={date => {
+            const obj = {...addEventdata};
+            obj.ticketList[index].salesenddate = date?.endDate;
+            setaddEventdata(obj);
+          }}
+          stateName="endDate"
+          value={
+            addEventdata.ticketList[index].salesenddate &&
+            `${addEventdata.ticketList[index].salesenddate?.getDate()}-${
+              addEventdata.ticketList[index].salesenddate?.getMonth() + 1
+            }-${addEventdata.ticketList[index].salesenddate?.getFullYear()}`
+          }
         />
         <InputDatePicker
           borderColor={colors.black}
           extraStyle={{width: '49%', marginLeft: width(1)}}
           placeHolder="Sales End Time"
           mode="time"
-          value=""
+          stateName={'endTime'}
+          setValue={date => {
+            const obj = {...addEventdata};
+            obj.ticketList[index].salesendtime = date?.endTime;
+            setaddEventdata(obj);
+          }}
+          value={
+            addEventdata.ticketList[index].salesendtime &&
+            `${
+              addEventdata.ticketList[index].salesendtime?.getHours() < 10
+                ? `0${addEventdata.ticketList[index].salesendtime?.getHours()}`
+                : addEventdata.ticketList[index].salesendtime?.getHours()
+            }:${addEventdata.ticketList[index].salesendtime?.getMinutes()} `
+          }
         />
       </View>
     </View>

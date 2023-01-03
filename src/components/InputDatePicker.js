@@ -6,7 +6,7 @@ import {height, totalSize, width} from 'react-native-dimension';
 const InputDatePicker = ({
   value,
   setValue,
-  extraData,
+  extraData = {},
   stateName,
   mode = 'date',
   borderColor = colors.gray,

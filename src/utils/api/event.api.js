@@ -366,7 +366,7 @@ export default useEventApi = () => {
   const useHandleSearchTagsService = (isEnabled, tagValue) => {
     const handleSearchTags = () => {
       const page = 1;
-      const limit = 9999;
+      const limit = 30;
       return axiosInstance.get(
         `/tags/search?page=${page}&limit=${limit}&searchQuery=${tagValue}`,
       );

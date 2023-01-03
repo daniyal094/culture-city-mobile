@@ -1,4 +1,10 @@
 PODS:
+  - AppAuth (1.6.0):
+    - AppAuth/Core (= 1.6.0)
+    - AppAuth/ExternalUserAgent (= 1.6.0)
+  - AppAuth/Core (1.6.0)
+  - AppAuth/ExternalUserAgent (1.6.0):
+    - AppAuth/Core
   - boost (1.76.0)
   - CocoaAsyncSocket (7.6.5)
   - DoubleConversion (1.1.6)
@@ -97,6 +103,14 @@ PODS:
   - GoogleMaps/Base (7.0.0)
   - GoogleMaps/Maps (7.0.0):
     - GoogleMaps/Base
+  - GoogleSignIn (6.2.4):
+    - AppAuth (~> 1.5)
+    - GTMAppAuth (~> 1.3)
+    - GTMSessionFetcher/Core (< 3.0, >= 1.1)
+  - GTMAppAuth (1.3.1):
+    - AppAuth/Core (~> 1.6)
+    - GTMSessionFetcher/Core (< 3.0, >= 1.5)
+  - GTMSessionFetcher/Core (2.3.0)
   - hermes-engine (0.70.1)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
@@ -417,6 +431,9 @@ PODS:
     - React-Core
   - RNGestureHandler (2.8.0):
     - React-Core
+  - RNGoogleSignin (9.0.2):
+    - GoogleSignIn (~> 6.2)
+    - React-Core
   - RNReanimated (2.11.0):
     - DoubleConversion
     - FBLazyVector
@@ -521,12 +538,14 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
+    - AppAuth
     - CocoaAsyncSocket
     - Flipper
     - Flipper-Boost-iOSX
@@ -540,6 +559,9 @@ SPEC REPOS:
     - fmt
     - Google-Maps-iOS-Utils
     - GoogleMaps
+    - GoogleSignIn
+    - GTMAppAuth
+    - GTMSessionFetcher
     - libevent
     - OpenSSL-Universal
     - SocketRocket
@@ -631,6 +653,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNGoogleSignin:
+    :path: "../node_modules/@react-native-google-signin/google-signin"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -639,6 +663,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
@@ -657,6 +682,9 @@ SPEC CHECKSUMS:
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   Google-Maps-iOS-Utils: 3343332b18dfd5be8f1f44edd7d481ace3da4d9a
   GoogleMaps: 6e9c923ca035989709fcb5771544fda4cc5fa2a4
+  GoogleSignIn: 5651ce3a61e56ca864160e79b484cd9ed3f49b7a
+  GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
+  GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
   hermes-engine: 9cd393f741bfa14d1d0cd90cc373e3619c0bc7ea
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
@@ -696,6 +724,7 @@ SPEC CHECKSUMS:
   ReactCommon: 7f86326b92009925c6dcf93f8e825060171c379f
   RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
   RNGestureHandler: 62232ba8f562f7dea5ba1b3383494eb5bf97a4d3
+  RNGoogleSignin: 22e468a9474dbcb8618d8847205ad4f0b2575d13
   RNReanimated: 65e6891cb51a660ec2e395c0c9bba66f443c6b10
   RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
