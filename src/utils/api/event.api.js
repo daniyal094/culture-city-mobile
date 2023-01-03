@@ -1,12 +1,11 @@
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import axiosInstance from '../config/axios-instance';
 import Toast from 'react-native-simple-toast';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {routes} from '../constants/routes';
 export default useEventApi = () => {
   const navigation = useNavigation();
-
+  const queryClient = new useQueryClient();
   const useHandleGetAllEventsApi = () => {
     const fetchAllEventsByType = () => {
       return axiosInstance.get(`/event-types/events`);
@@ -299,6 +298,157 @@ export default useEventApi = () => {
     );
   };
 
+  //Fetch Organizer's Current/Past Events
+  const useFetchOrganizerCurrentPastEventsService = isCurrentEvent => {
+    const route = useRoute();
+    const organizerId = route?.params?.organizerId;
+
+    const fetchFavouriteEventsRequest = isCurrent => {
+      const page = 1;
+      const limit = 999;
+      return axios.get(
+        `/event/past-current?page=${page}&limit=${limit}&organizerId=${organizerId}&current=${isCurrent.value}`,
+      );
+    };
+
+    return useQuery(
+      ['organizer-current-future-event', organizerId, isCurrentEvent],
+      () => fetchFavouriteEventsRequest(isCurrentEvent),
+      {
+        retry: 1,
+        select: response => {
+          return response?.data;
+        },
+      },
+    );
+  };
+
+  //Publish/Un-Publish Event
+  const useHandlePublishEventService = (eventId, userId, status) => {
+    const HandlePublishEventRequest = () => {
+      return axiosInstance.put(
+        `/event/publish?eventId=${eventId}&userId=${userId}`,
+        {status: status},
+      );
+    };
+
+    const onError = error => {
+      Toast.show(error.response.data.message);
+    };
+    const onSuccess = () => {
+      Toast.show(`Event ${status ? 'Published' : 'Un-Published'}`);
+      queryClient.invalidateQueries(['user-events', userId]);
+    };
+    return useMutation(() => HandlePublishEventRequest(), {
+      retry: 0,
+      onSuccess,
+      onError,
+    });
+  };
+
+  //Delete Event
+  const useHandleDeleteEventService = (eventId, userId) => {
+    const HandleDeleteEventRequest = () => {
+      return axiosInstance.delete(`/event/?eventId=${eventId}`);
+    };
+
+    const onSuccess = () => {
+      Toast.show('Event Deleted');
+      queryClient.invalidateQueries(['user-events', userId]);
+    };
+    return useMutation(eventId => HandleDeleteEventRequest(eventId), {
+      retry: 0,
+      onSuccess,
+    });
+  };
+
+  //Search Tags
+  const useHandleSearchTagsService = (isEnabled, tagValue) => {
+    const handleSearchTags = () => {
+      const page = 1;
+      const limit = 9999;
+      return axiosInstance.get(
+        `/tags/search?page=${page}&limit=${limit}&searchQuery=${tagValue}`,
+      );
+    };
+
+    return useQuery(['search-tags', tagValue], () => handleSearchTags(), {
+      retry: 0,
+      select: response => {
+        return response.data.data;
+      },
+      enabled: isEnabled,
+    });
+  };
+
+  //Create Event
+  const useHandleCreateEventService = userId => {
+    const handleCreateEventRequest = data => {
+      return axiosInstance.post(`/event/?userId=${userId}`, data);
+    };
+
+    const onSuccess = () => {
+      Toast.show('Event Created');
+      navigation.navigate(routes.home);
+    };
+    const onError = error => {
+      Toast.show(error.response.data.message);
+    };
+
+    return useMutation(eventData => handleCreateEventRequest(eventData), {
+      onError,
+      onSuccess,
+      retry: 0,
+    });
+  };
+
+  //Edit Event
+  const useHandleEditEventService = eventId => {
+    const userId = TokenService.getUser()?._id;
+
+    const handleEditEventRequest = (data, id) => {
+      return axios.put(`/event/?userId=${userId}&eventId=${id.value}`, data);
+    };
+
+    const onSuccess = () => {
+      useToaster('success', 'Success', 'Event Updated');
+
+      router.push({name: ROUTES.MANAGE_EVENTS});
+    };
+    const onError = error => {
+      useToaster('danger', 'Error', viewError(error.response.data.message));
+    };
+
+    return useMutation(
+      eventData => handleEditEventRequest(eventData, eventId),
+      {
+        onError,
+        onSuccess,
+        retry: 0,
+      },
+    );
+  };
+
+  //Delete Event Media
+  const useHandleDeleteEventMediaService = eventId => {
+    const userId = TokenService.getUser()?._id;
+
+    const handleDeleteEventMediaRequest = (id, media) => {
+      return axios.delete(`/event/image?userId=${userId}&eventId=${id.value}`, {
+        data: {fileName: media},
+      });
+    };
+
+    const onError = error => {
+      useToaster('danger', 'Error', viewError(error.response.data.message));
+    };
+
+    return useMutation(media => handleDeleteEventMediaRequest(eventId, media), {
+      onError,
+      retry: 0,
+    });
+  };
+
   return {
     useHandleGetAllEventsApi,
     useFetchGetSearchEventsApi,
@@ -314,6 +464,10 @@ export default useEventApi = () => {
     useFetchFavStatusEventsService,
     useHandlePurchaseEventService,
     useFetchRemainingTickesService,
-    useFetchOrganizerTicketOrdersService
+    useFetchOrganizerTicketOrdersService,
+    useHandlePublishEventService,
+    useHandleDeleteEventService,
+    useHandleSearchTagsService,
+    useHandleCreateEventService
   };
 };

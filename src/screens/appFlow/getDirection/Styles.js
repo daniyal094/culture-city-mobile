@@ -30,13 +30,13 @@ const styles = StyleSheet.create({
   btnContainer: {
     width: width(100),
     alignItems: 'center',
+    marginBottom:height(5)
   },
 
 
   mapContainer: {
     height: height(35),
     width: width(100),
-    backgroundColor: 'pink',
   },
   map: {
     height: height(35),

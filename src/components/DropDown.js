@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useId, useState} from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {colors} from '../utils/constants/colors';
 
@@ -11,16 +11,24 @@ const DropDown = ({
   placeholder = 'Select an item',
   zIndex,
   zIndexInverse,
+  defaultValue = '',
+  addCustomItem = false,
+
 }) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(() => defaultValue);
   const [items, setItems] = useState(list);
+  const [loading, setLoading] = useState(false);
 
+  const id = useId();
   const clickHandler = item => {
     setValue(item);
     setState({...extraData, [stateKey]: item()});
   };
-
+  //   useEffect(() => {
+  //     setValue(defaultValue);
+  //   }, [defaultValue]);
+  // console.log(value);
   return (
     <DropDownPicker
       open={open}
@@ -32,6 +40,7 @@ const DropDown = ({
       placeholderStyle={{color: colors.disableColor, opacity: 0.5}}
       arrowIconStyle={{opacity: 0.3}}
       searchable={items?.length > 4}
+      key={id}
       listMode="SCROLLVIEW"
       style={{
         ...newStyles,
@@ -47,6 +56,8 @@ const DropDown = ({
       placeholder={placeholder}
       zIndex={zIndex}
       zIndexInverse={zIndexInverse}
+      addCustomItem={addCustomItem}
+      
     />
   );
 };

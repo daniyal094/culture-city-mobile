@@ -40,7 +40,7 @@ const CheckBoxWithLable = ({
       <Pressable style={styles.checkBoxCircle} onPress={onChange}>
         {isChecked && <Image source={check} />}
       </Pressable>
-      <Text>{label}</Text>
+      <Text style={{color:colors.coal}}>{label}</Text>
       <TouchableOpacity onPress={linkPress}>
         <Text
           style={{

@@ -52,12 +52,12 @@ const GetDirection = props => {
             }}>
             <Image
               source={logo}
-              style={{width: width(10), height: height(5),borderRadius:50}}
+              style={{width: width(10), height: height(5), borderRadius: 50}}
               resizeMode="contain"
             />
           </Marker>
         </MapView>
-      </View> 
+      </View>
       <View style={{marginLeft: width(4)}}>
         <Text style={styles.EventHeading}>{data?.title}</Text>
         <View style={{...styles.flexRow, marginTop: height(1)}}>
@@ -88,18 +88,24 @@ const GetDirection = props => {
           pagingEnabled={true}
           snapToAlignment={'center'}
           renderItem={({item, idx}) => (
-            <Image
-              source={{uri: `${MEDIA_BASE_URL}${item}`}}
-              resizeMode="cover"
-              key={idx + 1}
+            <View
               style={{
-                width: width(80),
-                height: height(20),
-                borderRadius: 20,
-                marginHorizontal: width(10),
-                padding: 0,
-              }}
-            />
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Image
+                source={{uri: `${MEDIA_BASE_URL}${item}`}}
+                resizeMode="cover"
+                key={idx + 1}
+                style={{
+                  width: width(70),
+                  borderRadius: 20,
+                  height: height(20),
+                  padding: 0,
+                  marginHorizontal: width(3),
+                }}
+              />
+            </View>
           )}
           horizontal={true}
           keyExtractor={item => item.id}

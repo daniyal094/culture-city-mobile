@@ -36,7 +36,7 @@ const TicketOrders = () => {
                 return [
                   // idx + 1,
                   item.event.title,
-                  item?.seeker?.firstName + ' ' + item?.seeker?.lastName,
+                  item?.isGuest ? item?.guest?.email : item?.seeker?.firstName + ' ' + item?.seeker?.lastName,
                   item.event.startDateTime.split('T')[0],
                   item.isConfirmed ? 'Booking Confirmed' : 'Pending',
                   item.tickets + ' for ' + item.totalAmount,

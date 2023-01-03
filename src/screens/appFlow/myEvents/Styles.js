@@ -65,5 +65,15 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 1,
   },
+  headerTab:{
+    justifyContent:'center',
+    alignItems:'center',
+    width:width(50),
+    padding:10
+  },
+  headerTabText: {
+    fontSize: totalSize(2),
+    fontWeight:'600',
+  }  
 });
 export default styles;

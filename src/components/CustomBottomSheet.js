@@ -13,13 +13,14 @@ import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import FeatherIcon from 'react-native-vector-icons/dist/Feather';
 import {useNavigation} from '@react-navigation/native';
 import {routes} from '../utils/constants/routes';
-import {useUser} from '../utils/context/UserContenxt';
+import {useUser, useUserUpdate} from '../utils/context/UserContenxt';
 import SimpleToast from 'react-native-simple-toast';
 import Entypo from 'react-native-vector-icons/dist/Entypo';
 import useUserApi from '../utils/api/user.api';
 
 const CustomBottomSheet = ({bottomSheetModalRef}) => {
   const user = useUser();
+  const updateUser = useUserUpdate();
   const {useHandleLogOutApi} = useAuthApi();
   const navigation = useNavigation();
   const {mutate} = useHandleLogOutApi();
@@ -42,10 +43,11 @@ const CustomBottomSheet = ({bottomSheetModalRef}) => {
     if (user.role) {
       mutate(user?.user?._id);
     } else {
-      // navigation.reset({
-      //   index: 0,
-      //   routes: [{name : routes.auth}],
-      // });
+      updateUser({
+        user: {},
+        token: '',
+        role: '',
+      });
       navigation.navigate(routes.auth);
     }
     closeHandler();

@@ -2,6 +2,38 @@ import {useQuery} from '@tanstack/react-query';
 import axiosInstance from '../config/axios-instance';
 import Toast from 'react-native-simple-toast';
 export default useCultureApi = () => {
+
+
+    //Get All Cultures
+    const useFetchAllCulturesService = () => {
+      const FetchAllCulturesRequest = () => {
+          return axiosInstance.get(`/culture/all?page=1&limit=9999`)
+      }
+      return useQuery(
+          ['all-cultures'],
+          FetchAllCulturesRequest,
+          {
+              retry:1,
+              select:(response)=>{
+                  return{
+                      data:{
+                          ...response.data,
+                          data:response.data?.data?.map((cultures)=>cultures?.cultures).reduce(function(result, currentObject) {
+                              result.push(...currentObject.map((culture)=>{
+                                  return{
+                                      culture
+                                  }
+                              }))
+                              return result;
+                          }, []),
+                      }
+                  }
+              }
+          }
+      )
+  }
+
+
   //Get All Culture Groups
   const useFetchAllCultureGroupsService = () => {
     const FetchAllCultureGroupsRequest = () => {
@@ -27,8 +59,11 @@ export default useCultureApi = () => {
       },
     });
   };
+
+  
   return {
     useFetchAllCultureGroupsService,
     useFetchAllTimeZoneService,
+    useFetchAllCulturesService
   };
 };

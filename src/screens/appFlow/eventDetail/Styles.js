@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: width(8),
     marginVertical: height(2),
     lineHeight: 20,
+    color:colors.coal
   },
   btnContainer: {
     marginTop: height(1),

@@ -1,8 +1,6 @@
 import {
-  Image,
   Pressable,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from 'react-native';
@@ -54,7 +52,6 @@ const CustomInput = ({
         multiline={multiline}
         numberOfLines={numberOfLines}
         placeholderTextColor={colors.gray}
-        showSoftInputOnFocus={false}
       />
       {icon && (
         <Pressable style={{marginRight: width(3)}} onPress={iconPressHandler}>
