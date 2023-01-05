@@ -46,34 +46,34 @@ const SignIn = () => {
     }
   };
 
-  useEffect(() => {
-    GoogleSignin.configure({
-      webClientId:
-        '428562224901-faas9fkjq18usvsff6jllmskjkvljosc.apps.googleusercontent.com',
-      offlineAccess: false,
-      // forceCodeForRefreshToken: true,
-    });
-  }, []);
+  // useEffect(() => {
+  //   GoogleSignin.configure({
+  //     webClientId:
+  //       '428562224901-faas9fkjq18usvsff6jllmskjkvljosc.apps.googleusercontent.com',
+  //     offlineAccess: false,
+  //     // forceCodeForRefreshToken: true,
+  //   });
+  // }, []);
   const signIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        console.log('statusCodes.SIGN_IN_CANCELLED');
-        // user cancelled the login flow
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log('statusCodes.IN_PROGRESS');
+    // try {
+    //   await GoogleSignin.hasPlayServices();
+    //   const userInfo = await GoogleSignin.signIn();
+    //   console.log(userInfo);
+    // } catch (error) {
+    //   if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+    //     console.log('statusCodes.SIGN_IN_CANCELLED');
+    //     // user cancelled the login flow
+    //   } else if (error.code === statusCodes.IN_PROGRESS) {
+    //     console.log('statusCodes.IN_PROGRESS');
 
-        // operation (e.g. sign in) is in progress already
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        // play services not available or outdated
-        console.log('statusCodes.PLAY_SERVICES_NOT_AVAILABLE');
-      } else {
-        console.log(error, 'Some other error'); // some other error happened
-      }
-    }
+    //     // operation (e.g. sign in) is in progress already
+    //   } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+    //     // play services not available or outdated
+    //     console.log('statusCodes.PLAY_SERVICES_NOT_AVAILABLE');
+    //   } else {
+    //     console.log(error, 'Some other error'); // some other error happened
+    //   }
+    // }
   };
   return (
     <View style={styles.wrapper}>
