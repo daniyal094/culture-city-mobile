@@ -32,4 +32,5 @@ export const routes = {
   bill: 'bill',
   bookingSuccess: 'bookingSuccess',
   tickets : 'tickets',
+  
 };
